@@ -1,10 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Download, FileImage, FileText, Share2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Download, FileImage, FileText, Share2, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { IconButton, toast } from "@/components/ui";
+import { sets, terms } from "@/lib/db";
 import { downloadBackup } from "@/lib/io/backup";
+import { rowsFromNote, setTitleFor } from "@/lib/io/noteToSet";
 import {
   downloadBlob,
   exportNotePdf,
@@ -21,6 +24,9 @@ export function ExportMenu() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const cardCount = useMemo(() => rowsFromNote(pages).length, [pages]);
 
   useEffect(() => {
     if (!open) return;
@@ -77,6 +83,28 @@ export function ExportMenu() {
             className="absolute right-0 top-full z-40 mt-2 w-[240px] overflow-hidden rounded-[12px] border border-[var(--border-soft)] bg-[var(--surface)] p-1.5 shadow-[var(--shadow-lg)]"
           >
             <MenuItem
+              icon={<Sparkles className="h-4 w-4" />}
+              label="Make flashcards from this note"
+              hint={
+                cardCount > 0
+                  ? `${cardCount} card${cardCount === 1 ? "" : "s"} found`
+                  : "Needs typed lines like \u201cterm: definition\u201d"
+              }
+              disabled={cardCount === 0}
+              onClick={() =>
+                run("Study set", async () => {
+                  const rows = rowsFromNote(pages);
+                  const set = await sets.create({
+                    title: setTitleFor(note),
+                    subjectId: note.subjectId,
+                    sourceNoteId: note.id,
+                  });
+                  await terms.addMany(set.id, rows);
+                  router.push(`/set/?id=${set.id}`);
+                })
+              }
+            />
+            <MenuItem
               icon={<FileText className="h-4 w-4" />}
               label="Export as PDF"
               hint={`${pages.length} page${pages.length === 1 ? "" : "s"}`}
@@ -115,17 +143,20 @@ function MenuItem({
   label,
   hint,
   onClick,
+  disabled,
 }: {
   icon: React.ReactNode;
   label: string;
   hint?: string;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       role="menuitem"
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-[8px] px-3 py-2.5 text-left transition-colors hover:bg-[var(--surface-2)]"
+      disabled={disabled}
+      className="flex w-full items-center gap-3 rounded-[8px] px-3 py-2.5 text-left transition-colors hover:bg-[var(--surface-2)] disabled:pointer-events-none disabled:opacity-45"
     >
       <span className="text-[var(--text-muted)]">{icon}</span>
       <span className="min-w-0 flex-1">
