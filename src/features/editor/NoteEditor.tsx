@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, FullPageSpinner, IconButton, Tooltip, toast } from "@/components/ui";
 import { PAGE_WIDTH, blobs, notes as notesRepo } from "@/lib/db";
 import { renderThumbnail } from "@/lib/io/exportNote";
-import { PAPER_COLORS, PAPER_STYLES, defaultInkFor } from "@/lib/ink";
+import { PAPER_COLORS, PAPER_STYLES, STICKY_COLORS, defaultInkFor } from "@/lib/ink";
 import { spring } from "@/lib/motion/springs";
 import { newId } from "@/lib/utils/id";
 import { cn } from "@/lib/utils/cn";
@@ -97,8 +97,9 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
         "4": "lasso",
         "5": "text",
         "6": "shape",
-        "7": "image",
-        "8": "hand",
+        "7": "sticky",
+        "8": "image",
+        "9": "hand",
       };
       if (toolKeys[e.key]) {
         e.preventDefault();
@@ -161,6 +162,22 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
     });
   }, [firstPageId, note, addObject]);
 
+  const insertSticky = useCallback(() => {
+    if (!firstPageId) return;
+    addObject(firstPageId, {
+      kind: "sticky",
+      id: newId("obj"),
+      x: 120,
+      y: 180,
+      width: 200,
+      height: 200,
+      text: "",
+      // Cycle colours so consecutive notes are visually distinct.
+      color: STICKY_COLORS[Math.floor(Math.random() * STICKY_COLORS.length)],
+    });
+    toast.show("Sticky note added");
+  }, [firstPageId, addObject]);
+
   const onPickImage = useCallback(
     async (file: File) => {
       if (!firstPageId) return;
@@ -195,11 +212,14 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
     } else if (tool === "shape") {
       insertShape();
       setTool("lasso");
+    } else if (tool === "sticky") {
+      insertSticky();
+      setTool("lasso");
     } else if (tool === "image") {
       fileRef.current?.click();
       setTool("pen");
     }
-  }, [tool, insertText, insertShape, setTool]);
+  }, [tool, insertText, insertShape, insertSticky, setTool]);
 
   if (loading) return <FullPageSpinner />;
 

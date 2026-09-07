@@ -202,3 +202,24 @@ test("switching tools swaps the option tray", async ({ page }) => {
   await expect(page.getByText("Eraser", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Colour #ffe14d" })).toHaveCount(0);
 });
+
+test("the sticky note tool actually places a note", async ({ page }) => {
+  await seedNote(page);
+  await page.goto(`/note/?id=${NOTE_ID}`);
+  await expect(page.getByRole("application").first()).toBeVisible({ timeout: 15_000 });
+
+  await page.getByRole("button", { name: "Sticky note" }).click();
+
+  // Insert tools are actions, not modes: they place, then hand back to lasso.
+  const sticky = page.getByRole("textbox", { name: "Sticky note" });
+  await expect(sticky).toBeVisible({ timeout: 10_000 });
+
+  await sticky.fill("Remember the Krebs cycle");
+  await page.waitForTimeout(1200);
+  await page.reload();
+
+  await expect(page.getByRole("textbox", { name: "Sticky note" })).toHaveValue(
+    "Remember the Krebs cycle",
+    { timeout: 15_000 },
+  );
+});
