@@ -1,26 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Nunito } from "next/font/google";
 import { ThemeProvider, themeScript } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui";
 import "./globals.css";
 
-// Notability's chrome is set in SF Pro, which is Apple's and not redistributable.
-// Inter is the closest open equivalent — a neutral interface grotesque with the
-// same generous x-height and unfussy letterforms. next/font self-hosts it, so
-// there are no runtime font requests, which matters for an app that promises to
-// work offline.
-const inter = Inter({
+// Two faces, because Notability uses two. Headings are a heavy rounded display
+// type — that chunky friendliness is the interface's loudest signal, and Nunito
+// is the closest open match for it. Body copy stays on a neutral grotesque so
+// long lists and note titles read cleanly at small sizes.
+//
+// next/font self-hosts both, so there are still no runtime font requests.
+const display = Nunito({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const body = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
+  variable: "--font-body",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "freenote — notes and study, on your device",
+  title: "FreeNote — notes and study, on your device",
   description:
     "Open-source note-taking and flashcard study app. Handwriting, audio, and five study modes. No account, no cloud, no tracking.",
-  applicationName: "freenote",
+  applicationName: "FreeNote",
   manifest: "/manifest.webmanifest",
 };
 
@@ -38,7 +46,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

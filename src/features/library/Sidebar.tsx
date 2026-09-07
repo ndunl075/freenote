@@ -16,6 +16,7 @@ import {
   type SectionCounts,
   type SubjectNode,
 } from "./logic";
+import { LibrarySearch } from "./LibrarySearch";
 import { useLibrary } from "./store";
 import { SubjectRow } from "./SubjectRow";
 
@@ -60,7 +61,11 @@ export function Sidebar({ className }: { className?: string }) {
 
   return (
     <nav aria-label="Library" className={cn("flex h-full flex-col", className)}>
-      <ul role="list" className="flex flex-col gap-0.5 px-2 pt-3">
+      <div className="px-3 pb-1 pt-3">
+        <LibrarySearch />
+      </div>
+
+      <ul role="list" className="flex flex-col gap-0.5 px-2 pt-1">
         {FIXED.map((item) => {
           const selected = sameSection(item.section, section);
           const n = item.count(counts);
@@ -74,7 +79,7 @@ export function Sidebar({ className }: { className?: string }) {
                   "flex h-9 w-full items-center gap-2.5 rounded-[8px] px-2.5 text-left text-[14px] transition-colors duration-100",
                   "[&>svg]:h-[18px] [&>svg]:w-[18px] [&>svg]:shrink-0",
                   selected
-                    ? "bg-[var(--brand-soft)] font-bold text-[var(--brand)]"
+                    ? "bg-[var(--select)] font-bold text-[var(--select-text)]"
                     : "font-semibold text-[var(--text)] hover:bg-[var(--surface-2)] [&>svg]:text-[var(--text-muted)]",
                 )}
               >
@@ -84,7 +89,7 @@ export function Sidebar({ className }: { className?: string }) {
                   <span
                     className={cn(
                       "text-[12px] font-semibold tabular-nums",
-                      selected ? "text-[var(--brand)]" : "text-[var(--text-faint)]",
+                      selected ? "text-[var(--text-muted)]" : "text-[var(--text-faint)]",
                     )}
                   >
                     {n}

@@ -8,6 +8,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { IconButton } from "@/components/ui";
 import { ContentGrid, GridSkeleton } from "./ContentGrid";
 import { EmptyState } from "./EmptyState";
+import { HomeHero } from "./HomeHero";
 import { LibraryDialogs } from "./LibraryDialogs";
 import { LibraryHeader, SEARCH_INPUT_ID } from "./LibraryHeader";
 import { sectionKey, toItems, visibleItems } from "./logic";
@@ -55,6 +56,10 @@ export function Library() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+  // The hero belongs on the landing view only: it is an invitation to start,
+  // not a banner to sit above every filtered result.
+  const showHero = ready && section.kind === "all" && query.trim() === "";
+
   const allItems = useMemo(() => toItems(notes, sets), [notes, sets]);
   const items = useMemo(
     () => visibleItems(allItems, { section, query, sort, subjects }),
@@ -90,6 +95,16 @@ export function Library() {
         </Sheet>
 
         <section className="min-w-0 flex-1 px-4 pb-16 pt-5 sm:px-6 lg:px-8" aria-label="Library contents">
+          {showHero && (
+            <HomeHero
+              seed={allItems.length}
+              onNewNote={() => void create.newNote()}
+              onRecord={() => void create.newRecording()}
+              onNewSet={() => void create.newSet()}
+              onImport={importer.pick}
+            />
+          )}
+
           <LibraryHeader count={items.length} onImport={importer.pick} />
 
           {!ready ? (

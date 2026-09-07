@@ -1,4 +1,4 @@
-# freenote — Architecture
+# FreeNote — Architecture
 
 Open-source, local-first note-taking + study app. One Notability-style interface across
 both halves: the ink editor and the study modes share a single design language.
@@ -25,11 +25,14 @@ No accounts, no server, no telemetry. Everything lives in the browser on your de
 
 ## Design language
 
-Notability's chrome is essentially clean iOS system UI with paper warmth, so the tokens lean
-on iOS system colours: a calm `#007AFF` accent, warm neutral greys, neutral-charcoal dark
-mode, hairline borders, generous corner radii, and soft shallow elevation. Buttons dim and
-settle rather than bouncing. Type is Inter — the closest open stand-in for SF Pro — at
-interface weights, never display weights.
+Notability's interface is friendlier and chunkier than plain system chrome. The tokens
+follow it: a periwinkle-indigo `#4C6EF5` accent, warm neutral greys, neutral-charcoal dark
+mode, generous corners, and pastel tinted action tiles whose borders sit a few steps darker
+than their wash — that border is what stops them reading as flat blocks.
+
+Selection states are **grey**, not blue, which keeps the accent meaningful where it appears.
+Two typefaces, because Notability uses two: Nunito for the heavy rounded display headings
+that carry the app's voice, and Inter for body copy that has to stay legible in long lists.
 
 The study modes use exactly these tokens. Nothing about the study half is styled
 separately; a term card and a note card are the same object with different content.
