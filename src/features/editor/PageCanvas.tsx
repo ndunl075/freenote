@@ -229,7 +229,14 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     if (state.stylusOnly && e.pointerType === "touch") return;
     // Never draw with a right-click or a stylus eraser barrel button.
     if (e.button !== 0 && e.pointerType === "mouse") return;
-    if (state.tool === "hand" || state.tool === "text" || state.tool === "image") return;
+    if (
+      state.tool === "hand" ||
+      state.tool === "text" ||
+      state.tool === "sticky" ||
+      state.tool === "image"
+    ) {
+      return;
+    }
     if (activePointerRef.current !== null) return;
 
     activePointerRef.current = e.pointerId;

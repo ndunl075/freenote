@@ -6,6 +6,10 @@
 
 No account. No cloud. No tracking. No subscription.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fndunl075%2Ffreenote)
+
+<img src="docs/screenshots/library.png" alt="The freenote library, showing subjects in a sidebar and a grid of notes and study sets" width="820">
+
 </div>
 
 ---
@@ -56,12 +60,15 @@ everything, or move it to another computer.
 
 ### Taking notes
 
+<img src="docs/screenshots/editor.png" alt="The freenote note editor with a tool ribbon, colour tray and ruled paper" width="820">
+
 - **Write by hand** with pressure-sensitive ink that thickens and thins like a real pen
 - **Highlight** in six colours — highlighter always goes *behind* your writing, so it never
   covers it up
 - **Erase** by swiping through a mistake; the whole stroke disappears, not a ragged fragment
 - **Lasso** a chunk of writing to move it somewhere else
 - **Add text boxes, pictures, shapes and sticky notes**
+- **Draw a rough circle, box or line and hold still** — freenote snaps it to a clean shape
 - **Choose your paper**: blank, ruled, grid, dotted, Cornell, or music staves — in white,
   cream, yellow, grey or black
 - **Record audio while you write**, then scrub back through the lecture
@@ -69,6 +76,8 @@ everything, or move it to another computer.
 - **Export** a note as a PDF or an image
 
 ### Studying
+
+<img src="docs/screenshots/learn.png" alt="Learn mode marking a wrong answer in coral and the correct answer in green" width="820">
 
 - **Flashcards** — flip through cards, swipe to sort them into "know it" and "still learning"
 - **Learn** — adapts to you, starting with multiple choice and graduating to typing the
@@ -97,9 +106,12 @@ on the screen while you write.
 
 You don't need to do this to use freenote — but since it's open source, you can.
 
-**If you just want it hosted for free:** fork this repository on GitHub, then import it at
-[vercel.com/new](https://vercel.com/new). Vercel detects the settings automatically. It takes
-about a minute and costs nothing.
+**If you just want it hosted for free:** press the *Deploy with Vercel* button at the top of
+this page. It copies the project to your own GitHub account and puts it online, usually in
+under two minutes, at no cost. You don't need to understand any of the code to do this.
+
+You can also import an existing fork at [vercel.com/new](https://vercel.com/new) — Vercel
+detects every setting automatically, because the project builds to plain static files.
 
 **If you want to run it on your own machine,** you'll need
 [Node.js](https://nodejs.org) 20 or newer:

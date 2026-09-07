@@ -8,6 +8,7 @@ export type ToolId =
   | "lasso"
   | "text"
   | "shape"
+  | "sticky"
   | "image"
   | "hand";
 
@@ -33,6 +34,9 @@ export const INK_COLORS = [
   "#00b8d4",
   "#ffffff",
 ] as const;
+
+/** Sticky note colours, matching the highlighter tray's warmth. */
+export const STICKY_COLORS = ["#ffe14d", "#ffd0e0", "#c6f0c2", "#c9e4ff", "#e6d6ff"] as const;
 
 export const HIGHLIGHTER_COLORS = [
   "#ffe14d",

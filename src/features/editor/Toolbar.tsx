@@ -11,6 +11,7 @@ import {
   Pen,
   Redo2,
   Shapes,
+  StickyNote,
   Type,
   Undo2,
 } from "lucide-react";
@@ -36,8 +37,9 @@ const TOOLS: { id: ToolId; label: string; icon: React.ReactNode; shortcut: strin
   { id: "lasso", label: "Lasso", icon: <Lasso />, shortcut: "4" },
   { id: "text", label: "Text", icon: <Type />, shortcut: "5" },
   { id: "shape", label: "Shapes", icon: <Shapes />, shortcut: "6" },
-  { id: "image", label: "Image", icon: <ImageIcon />, shortcut: "7" },
-  { id: "hand", label: "Pan", icon: <Hand />, shortcut: "8" },
+  { id: "sticky", label: "Sticky note", icon: <StickyNote />, shortcut: "7" },
+  { id: "image", label: "Image", icon: <ImageIcon />, shortcut: "8" },
+  { id: "hand", label: "Pan", icon: <Hand />, shortcut: "9" },
 ];
 
 /**
