@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils/cn";
 import { ObjectLayer } from "./ObjectLayer";
 import { PageCanvas } from "./PageCanvas";
 import { SelectionOverlay } from "./SelectionOverlay";
+import { RecordingBar } from "./RecordingBar";
 import { Toolbar } from "./Toolbar";
 import { useEditor } from "./store";
 
@@ -200,6 +201,7 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg-subtle)]">
       <Toolbar onBack={onBack} />
+      <RecordingBar noteId={noteId} />
 
       <input
         ref={fileRef}

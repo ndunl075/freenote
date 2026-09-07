@@ -15,6 +15,7 @@ import {
   type InkTool,
 } from "@/lib/ink";
 import { useEditor } from "./store";
+import { useRecording } from "./recordingStore";
 
 /* ============================================================================
    A single page.
@@ -262,7 +263,8 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       eraserPathRef.current = [];
       pendingEraseRef.current.clear();
     } else {
-      const stroke = builderRef.current?.commit();
+      // Stamp the audio offset so playback can replay this stroke in time.
+      const stroke = builderRef.current?.commit(useRecording.getState().offsetForStroke());
       builderRef.current = null;
       if (stroke) store.commitStroke(page.id, stroke);
     }
