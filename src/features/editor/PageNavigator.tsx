@@ -84,7 +84,7 @@ export function PageNavigator({
                     onClick={() => onJump(page.id)}
                     aria-label={`Go to page ${i + 1}`}
                     className={cn(
-                      "block w-full overflow-hidden rounded-[4px] border-2 transition-all",
+                      "block w-full overflow-hidden rounded-[4px] border transition-all",
                       "border-[var(--border)] hover:border-[var(--brand)]",
                     )}
                   >
@@ -112,7 +112,7 @@ export function PageNavigator({
 
               <button
                 onClick={() => void addPage()}
-                className="flex h-16 w-full items-center justify-center gap-1 rounded-[4px] border-2 border-dashed border-[var(--border)] text-[12px] font-semibold text-[var(--text-muted)] transition-colors hover:border-[var(--brand)] hover:text-[var(--brand)]"
+                className="flex h-16 w-full items-center justify-center gap-1 rounded-[4px] border border-dashed border-[var(--border)] text-[12px] font-semibold text-[var(--text-muted)] transition-colors hover:border-[var(--brand)] hover:text-[var(--brand)]"
               >
                 <Copy className="h-3.5 w-3.5" />
                 Add page
@@ -139,7 +139,7 @@ function MiniButton({
       aria-label={label}
       title={label}
       onClick={onClick}
-      className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#0a092d]/80 text-white hover:bg-[#0a092d]"
+      className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[var(--inverse-surface)]/85 text-[var(--inverse-text)] hover:bg-[var(--inverse-surface)]"
     >
       {children}
     </button>

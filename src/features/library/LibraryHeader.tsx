@@ -81,7 +81,7 @@ export function LibraryHeader({ count, onImport }: { count: number; onImport: ()
             aria-label="Search notes and sets by title"
             autoComplete="off"
             className={cn(
-              "h-11 w-full rounded-full border-2 border-[var(--border)] bg-[var(--surface)] pl-10 pr-10",
+              "h-11 w-full rounded-full border border-[var(--border)] bg-[var(--surface)] pl-10 pr-10",
               "text-[15px] text-[var(--text)] placeholder:text-[var(--text-faint)]",
               "outline-none transition-colors focus:border-[var(--brand)]",
               "[&::-webkit-search-cancel-button]:hidden",

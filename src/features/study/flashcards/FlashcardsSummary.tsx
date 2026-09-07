@@ -51,7 +51,7 @@ export function FlashcardsSummary({
           className="mt-8 grid items-center gap-8 rounded-[16px] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)] md:grid-cols-[auto_1fr] md:p-8"
         >
           <ProgressRing value={know} max={total} size={140} stroke={12} tone="correct">
-            <span className="text-[30px] font-extrabold tabular-nums">{pct}%</span>
+            <span className="text-[30px] font-semibold tabular-nums">{pct}%</span>
           </ProgressRing>
           <div className="flex flex-col gap-3">
             <PileStat label="Know" count={know} tone="correct" layoutId="pile-know" />
@@ -101,7 +101,7 @@ function PileStat({
       <motion.span
         layoutId={layoutId}
         transition={spring.soft}
-        className="inline-flex min-w-[44px] items-center justify-center rounded-full border-2 bg-[var(--surface)] px-3 py-1 text-[16px] font-extrabold tabular-nums"
+        className="inline-flex min-w-[44px] items-center justify-center rounded-full border bg-[var(--surface)] px-3 py-1 text-[16px] font-semibold tabular-nums"
         style={{ borderColor: color, color }}
       >
         {count}

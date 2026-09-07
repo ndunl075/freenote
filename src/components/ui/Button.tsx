@@ -16,40 +16,31 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /**
- * Quizlet's buttons sit on a hard 4px bottom shadow and physically compress
- * into it on press — translate down 4px, shadow to 0. That one detail carries
- * most of the brand's tactile feel, so it lives here rather than being
- * re-implemented per surface.
+ * Notability's buttons are quiet: a soft-cornered fill that dims and settles
+ * very slightly under the finger. No hard offset shadow, no bounce — the
+ * feedback is a tint change, the way iOS controls behave.
  */
 const base =
-  "relative inline-flex items-center justify-center gap-2 rounded-[8px] font-bold " +
-  "select-none whitespace-nowrap transition-[transform,box-shadow,background-color] " +
-  "duration-100 ease-[cubic-bezier(0.4,0,0.2,1)] " +
+  "relative inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold " +
+  "select-none whitespace-nowrap transition-[transform,background-color,border-color,opacity] " +
+  "duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] " +
   "disabled:pointer-events-none disabled:opacity-40 " +
-  "active:translate-y-[4px]";
+  "active:scale-[0.975]";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-[var(--brand)] text-[var(--brand-ink)] shadow-[0_4px_0_0_var(--brand-active)] " +
-    "hover:bg-[var(--brand-hover)] active:shadow-none",
+  primary: "bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)]",
   secondary:
-    "bg-[var(--surface)] text-[var(--text)] border-2 border-[var(--border)] " +
-    "shadow-[0_4px_0_0_var(--border)] hover:bg-[var(--surface-2)] active:shadow-none",
-  ghost:
-    "bg-transparent text-[var(--text)] hover:bg-[var(--surface-2)] active:translate-y-0 " +
-    "font-semibold",
-  danger:
-    "bg-[var(--incorrect)] text-white shadow-[0_4px_0_0_var(--incorrect-text)] " +
-    "hover:brightness-105 active:shadow-none",
-  star:
-    "bg-[var(--star)] text-[#2b2200] shadow-[0_4px_0_0_#c79c00] " +
-    "hover:brightness-105 active:shadow-none",
+    "bg-[var(--surface-2)] text-[var(--text)] border border-[var(--border)] " +
+    "hover:bg-[var(--surface-3)]",
+  ghost: "bg-transparent text-[var(--brand)] hover:bg-[var(--surface-2)]",
+  danger: "bg-[var(--incorrect)] text-white hover:brightness-95",
+  star: "bg-[var(--star)] text-[#3a2c00] hover:brightness-95",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-3 text-[13px]",
-  md: "h-11 px-5 text-[15px]",
-  lg: "h-14 px-7 text-[17px]",
+  sm: "h-8 px-3 text-[13px]",
+  md: "h-10 px-4 text-[15px]",
+  lg: "h-12 px-6 text-[16px]",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(

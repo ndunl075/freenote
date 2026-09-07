@@ -170,16 +170,24 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
 
     if (tool === "lasso" && lassoPathRef.current.length >= 4) {
       const path = lassoPathRef.current;
+      // Read the accent from the live theme so the lasso matches light and
+      // dark. Only on frames where a lasso is actually being drawn, so this
+      // never touches the pen's hot path.
+      const accent =
+        getComputedStyle(document.documentElement).getPropertyValue("--brand").trim() ||
+        "#007aff";
       ctx.beginPath();
       ctx.moveTo(path[0], path[1]);
       for (let i = 2; i < path.length; i += 2) ctx.lineTo(path[i], path[i + 1]);
       ctx.closePath();
-      ctx.strokeStyle = "#4255ff";
+      ctx.strokeStyle = accent;
       ctx.lineWidth = 1.5;
       ctx.setLineDash([6, 5]);
       ctx.stroke();
-      ctx.fillStyle = "rgba(66, 85, 255, 0.08)";
+      ctx.globalAlpha = 0.08;
+      ctx.fillStyle = accent;
       ctx.fill();
+      ctx.globalAlpha = 1;
     }
 
     if (tool === "eraser" && eraserPathRef.current.length >= 2) {
@@ -188,7 +196,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       const y = path[path.length - 1];
       ctx.beginPath();
       ctx.arc(x, y, eraserSize, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(10, 9, 45, 0.45)";
+      ctx.strokeStyle = "rgba(60, 60, 67, 0.5)";
       ctx.lineWidth = 1.5;
       ctx.stroke();
       ctx.fillStyle = "rgba(255, 255, 255, 0.35)";

@@ -156,7 +156,7 @@ export function Match({ set, terms }: MatchProps) {
         title={set.title}
         center={
           stage === "playing" ? (
-            <p className="inline-flex items-center gap-1.5 text-[18px] font-extrabold tabular-nums" aria-live="off">
+            <p className="inline-flex items-center gap-1.5 text-[18px] font-semibold tabular-nums" aria-live="off">
               <Timer className="h-5 w-5 text-[var(--text-muted)]" aria-hidden />
               {seconds(elapsed)}
               <span className="text-[13px] font-semibold text-[var(--text-muted)]">sec</span>
@@ -245,7 +245,7 @@ export function Match({ set, terms }: MatchProps) {
               <motion.p variants={riseIn} className="text-[15px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
                 {isRecord ? "New personal best!" : "Nice work!"}
               </motion.p>
-              <motion.p variants={riseIn} className="mt-3 text-[56px] font-extrabold leading-none tabular-nums md:text-[72px]">
+              <motion.p variants={riseIn} className="mt-3 text-[56px] font-semibold leading-none tabular-nums md:text-[72px]">
                 {seconds(finalMs)}
                 <span className="ml-2 text-[20px] font-bold text-[var(--text-muted)]">sec</span>
               </motion.p>
@@ -340,7 +340,7 @@ function Tile({
         aria-pressed={selected}
         aria-label={`${tile.side === "term" ? "Term" : "Definition"}: ${tile.text}`}
         className={cn(
-          "relative flex h-full w-full cursor-grab touch-none select-none items-center justify-center rounded-[10px] border-2 p-3 text-center font-medium leading-snug",
+          "relative flex h-full w-full cursor-grab touch-none select-none items-center justify-center rounded-[10px] border p-3 text-center font-medium leading-snug",
           "bg-[var(--surface)] text-[var(--text)] shadow-[var(--shadow-sm)] transition-colors duration-150 md:p-4",
           "active:cursor-grabbing active:shadow-[var(--shadow-lg)] disabled:pointer-events-none",
           size,

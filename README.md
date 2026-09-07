@@ -29,8 +29,10 @@ back later, you can see exactly what you were writing as each thing was said.
 five different ways: classic flashcards, a guided Learn mode that adapts to what you keep
 getting wrong, a practice Test, a timed Match game, and an arcade mode called Blast.
 
-If you've used Notability and Quizlet, freenote will feel immediately familiar. That's on
-purpose.
+Both halves live in one app and look like one app — the study screens use the same calm,
+paper-first interface as the note editor, not a separate visual identity bolted on.
+
+If you've used Notability, freenote will feel immediately familiar. That's on purpose.
 
 ## The part that makes it different
 
@@ -153,11 +155,11 @@ Built with Next.js, TypeScript, Tailwind CSS, Framer Motion, Dexie (IndexedDB) a
 perfect-freehand. Everything ships as a static export — there are no API routes and no server
 runtime, which is what makes the privacy guarantee structural rather than a policy.
 
-## A note on the apps that inspired this
+## A note on the app that inspired this
 
 freenote is an independent, open-source project. It is not affiliated with, endorsed by, or
-connected to Notability or Quizlet in any way. Those are both good apps; this is a free
-alternative for people who'd rather keep their notes on their own device.
+connected to Notability in any way. Notability is a good app; this is a free alternative for
+people who would rather keep their notes on their own device.
 
 ## Licence
 

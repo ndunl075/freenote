@@ -168,7 +168,7 @@ export function Blast({ set, terms, settings }: BlastProps) {
                   autoFocus
                   animate={flash === "miss" && !reduce ? shake : { x: 0 }}
                   className={cn(
-                    "h-14 w-full rounded-[12px] border-2 bg-[var(--surface)] px-4 text-[18px] text-[var(--text)] outline-none",
+                    "h-14 w-full rounded-[12px] border bg-[var(--surface)] px-4 text-[18px] text-[var(--text)] outline-none",
                     "transition-colors placeholder:text-[var(--text-faint)]",
                     flash === "hit"
                       ? "border-[var(--correct)] bg-[var(--correct-bg)]"
@@ -193,7 +193,7 @@ export function Blast({ set, terms, settings }: BlastProps) {
               <motion.p variants={riseIn} className="text-[15px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
                 {state.terms.length ? "Game over" : "Nothing to blast"}
               </motion.p>
-              <motion.p variants={riseIn} className="mt-3 text-[64px] font-extrabold leading-none tabular-nums">
+              <motion.p variants={riseIn} className="mt-3 text-[64px] font-semibold leading-none tabular-nums">
                 {state.score}
               </motion.p>
               <motion.dl variants={riseIn} className="mt-6 grid grid-cols-3 gap-3 text-[13px] font-semibold text-[var(--text-muted)]">
@@ -236,7 +236,7 @@ function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-[12px] bg-[var(--surface)] px-4 py-3 shadow-[var(--shadow-sm)]">
       <dt>{label}</dt>
-      <dd className="mt-1 text-[22px] font-extrabold tabular-nums text-[var(--text)]">{value}</dd>
+      <dd className="mt-1 text-[22px] font-semibold tabular-nums text-[var(--text)]">{value}</dd>
     </div>
   );
 }
@@ -249,7 +249,7 @@ function Falling({ tile }: { tile: BlastTile }) {
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1, transition: spring.snap }}
       className={cn(
-        "absolute max-w-[min(46vw,240px)] rounded-[10px] border-2 bg-[var(--surface)] px-3 py-2 text-center text-[13px] font-medium leading-snug shadow-[var(--shadow-md)] md:text-[15px]",
+        "absolute max-w-[min(46vw,240px)] rounded-[10px] border bg-[var(--surface)] px-3 py-2 text-center text-[13px] font-medium leading-snug shadow-[var(--shadow-md)] md:text-[15px]",
         urgent ? "border-[var(--incorrect)]" : "border-[var(--border-soft)]",
       )}
       style={{ left: `${tile.x * 100}%`, top: `${tile.y * 100}%`, x: "-50%", y: "-100%" }}
@@ -286,7 +286,7 @@ function Pop({ pop, reduce }: { pop: BlastPop; reduce: boolean }) {
         initial={{ y: 0, opacity: 1 }}
         animate={{ y: -40, opacity: 0 }}
         transition={{ duration: 0.65, ease: "easeOut" }}
-        className="absolute -translate-x-1/2 whitespace-nowrap text-[16px] font-extrabold text-[var(--correct-text)]"
+        className="absolute -translate-x-1/2 whitespace-nowrap text-[16px] font-semibold text-[var(--correct-text)]"
       >
         +{pop.points}
       </motion.span>

@@ -173,7 +173,7 @@ export function TermCardEditor({
               type="button"
               onClick={() => fileInput.current?.click()}
               className={cn(
-                "flex h-[60px] w-[84px] flex-col items-center justify-center gap-0.5 rounded-[8px] border-2 border-dashed",
+                "flex h-[60px] w-[84px] flex-col items-center justify-center gap-0.5 rounded-[8px] border border-dashed",
                 "border-[var(--border)] text-[10px] font-bold uppercase tracking-wide text-[var(--text-muted)]",
                 "transition-colors hover:border-[var(--brand)] hover:text-[var(--brand)]",
               )}

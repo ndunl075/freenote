@@ -88,7 +88,7 @@ export function SetCard({
             Study set
           </span>
           <span className="text-[var(--brand)]">
-            <span className="block text-[34px] font-extrabold leading-none tabular-nums">{mastery.total}</span>
+            <span className="block text-[34px] font-semibold leading-none tabular-nums">{mastery.total}</span>
             <span className="text-[12px] font-bold uppercase tracking-wide opacity-80">
               {mastery.total === 1 ? "term" : "terms"}
             </span>

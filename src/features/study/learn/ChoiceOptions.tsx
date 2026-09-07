@@ -58,7 +58,7 @@ export function ChoiceOptions({
                 onClick={() => onChoose(option)}
                 aria-label={`Option ${i + 1}: ${option}`}
                 className={cn(
-                  "flex min-h-[64px] w-full items-center gap-3 rounded-[8px] border-2 px-4 py-3 text-left text-[16px] font-medium",
+                  "flex min-h-[64px] w-full items-center gap-3 rounded-[8px] border px-4 py-3 text-left text-[16px] font-medium",
                   "transition-colors duration-150",
                   tone === "idle" &&
                     "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]",
@@ -70,7 +70,7 @@ export function ChoiceOptions({
               >
                 <span
                   className={cn(
-                    "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-[12px] font-bold",
+                    "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[12px] font-bold",
                     tone === "correct"
                       ? "border-[var(--correct)] bg-[var(--correct)] text-[var(--brand-ink)]"
                       : tone === "wrong"

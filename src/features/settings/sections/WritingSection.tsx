@@ -99,7 +99,7 @@ export function WritingSection({
               <>
                 <span
                   className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors",
+                    "flex h-10 w-10 items-center justify-center rounded-full border transition-colors",
                     selected ? "border-[var(--brand)]" : "border-[var(--border)]",
                   )}
                   style={{ background: paperBackground(color) }}

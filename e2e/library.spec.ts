@@ -19,6 +19,31 @@ async function clearData(page: Page): Promise<void> {
   await page.goto("/");
 }
 
+/**
+ * Dexie is what declares the schema, so a test that writes before the app has
+ * opened the database would create a store-less one and fail on the first
+ * transaction. Wait for the stores to actually exist.
+ */
+async function waitForSchema(page: Page): Promise<void> {
+  await page.waitForFunction(
+    async () => {
+      const dbs = await indexedDB.databases();
+      if (!dbs.some((d) => d.name === "freenote")) return false;
+      return new Promise<boolean>((resolve) => {
+        const req = indexedDB.open("freenote");
+        req.onsuccess = () => {
+          const ok = req.result.objectStoreNames.contains("notes");
+          req.result.close();
+          resolve(ok);
+        };
+        req.onerror = () => resolve(false);
+      });
+    },
+    null,
+    { timeout: 15_000 },
+  );
+}
+
 test.beforeEach(async ({ page }) => {
   await clearData(page);
 });
@@ -64,6 +89,7 @@ test("creating a study set navigates to it", async ({ page }) => {
 
 test("search narrows the grid to matching titles", async ({ page }) => {
   // Seed two notes so there is something to filter between.
+  await waitForSchema(page);
   await page.evaluate(async () => {
     const open = indexedDB.open("freenote");
     const db: IDBDatabase = await new Promise((resolve, reject) => {

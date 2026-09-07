@@ -20,7 +20,7 @@ export function MasteryBars({ summary }: { summary: MasterySummary }) {
         return (
           <div key={row.key} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1.5">
             <dt className="text-[15px] font-bold text-[var(--text)]">{row.label}</dt>
-            <dd className="text-[15px] font-extrabold tabular-nums text-[var(--text)]">{count}</dd>
+            <dd className="text-[15px] font-semibold tabular-nums text-[var(--text)]">{count}</dd>
             <dd className="col-span-2 h-3 overflow-hidden rounded-full bg-[var(--track)]">
               <motion.div
                 className="h-full rounded-full"

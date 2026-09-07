@@ -1,17 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ThemeProvider, themeScript } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui";
 import "./globals.css";
 
-// Quizlet ships Hurme Geometric Sans, which is proprietary. Figtree is the
-// closest open geometric-humanist match: same double-storey `a`, same tight
-// heading colour. next/font self-hosts it, so there are no runtime font
-// requests — which matters for an app that promises to work offline.
-const figtree = Figtree({
+// Notability's chrome is set in SF Pro, which is Apple's and not redistributable.
+// Inter is the closest open equivalent — a neutral interface grotesque with the
+// same generous x-height and unfussy letterforms. next/font self-hosts it, so
+// there are no runtime font requests, which matters for an app that promises to
+// work offline.
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-figtree",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a092d" },
+    { media: "(prefers-color-scheme: dark)", color: "#131315" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -37,7 +38,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={figtree.variable} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

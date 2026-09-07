@@ -42,7 +42,7 @@ export function Tooltip({
             transition={{ duration: 0.12 }}
             className={cn(
               "pointer-events-none absolute z-50 whitespace-nowrap rounded-[6px]",
-              "bg-[#0a092d] px-2.5 py-1.5 text-[12px] font-semibold text-white shadow-[var(--shadow-md)]",
+              "bg-[var(--inverse-surface)] px-2.5 py-1.5 text-[12px] font-semibold text-[var(--inverse-text)] shadow-[var(--shadow-md)]",
               pos,
             )}
           >

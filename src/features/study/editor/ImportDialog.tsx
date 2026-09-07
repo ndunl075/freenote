@@ -176,7 +176,7 @@ function SeparatorPicker<T extends string>({
             <label
               key={o.value}
               className={cn(
-                "inline-flex cursor-pointer items-center gap-2 rounded-full border-2 px-3 py-1.5 text-[14px] font-semibold transition-colors",
+                "inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-[14px] font-semibold transition-colors",
                 selected
                   ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--text)]"
                   : "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]",
@@ -200,7 +200,7 @@ function SeparatorPicker<T extends string>({
             value={custom}
             onChange={(e) => onCustom(e.target.value)}
             placeholder={customPlaceholder}
-            className="h-9 w-24 rounded-[8px] border-2 border-[var(--border)] bg-[var(--surface)] px-2 font-mono text-[14px] outline-none focus:border-[var(--brand)]"
+            className="h-9 w-24 rounded-[8px] border border-[var(--border)] bg-[var(--surface)] px-2 font-mono text-[14px] outline-none focus:border-[var(--brand)]"
           />
         )}
       </div>

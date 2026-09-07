@@ -58,7 +58,7 @@ export function RecordingBar({ noteId }: { noteId: string }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.97 }}
             transition={spring.snap}
-            className="flex items-center gap-3 rounded-full bg-[#0a092d] px-4 py-2.5 shadow-[var(--shadow-lg)]"
+            className="flex items-center gap-3 rounded-full bg-[var(--inverse-surface)] px-4 py-2.5 shadow-[var(--shadow-lg)]"
           >
             <motion.span
               animate={
