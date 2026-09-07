@@ -1,3 +1,4 @@
+export * from "./dynamics";
 export * from "./geometry";
 export * from "./tools";
 export * from "./stroke";

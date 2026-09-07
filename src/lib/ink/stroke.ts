@@ -1,6 +1,7 @@
 import { getStroke } from "perfect-freehand";
 import { newId } from "@/lib/utils/id";
 import type { Stroke } from "@/lib/db/types";
+import { nibPressure, tiltFromEvent } from "./dynamics";
 import { POINT_STRIDE, bboxOf, simplify } from "./geometry";
 import { opacityFor, strokeOptions, type InkTool } from "./tools";
 
@@ -19,6 +20,11 @@ export class StrokeBuilder {
   private sawPressure = false;
   private points: number[] = [];
   private startedAt: number;
+  /** Previous sample, for the speed term in the nib dynamics. */
+  private lastX = 0;
+  private lastY = 0;
+  private lastAt = 0;
+  private started = false;
 
   constructor(tool: InkTool, color: string, size: number, startedAt = performance.now()) {
     this.tool = tool;
@@ -36,11 +42,20 @@ export class StrokeBuilder {
     return this.points;
   }
 
-  push(x: number, y: number, pressure: number): void {
-    // Chromium reports 0.5 for mice and 0 for some pens before contact. Treat
-    // a constant 0.5 as "no pressure data" and let perfect-freehand simulate.
+  /**
+   * Records one pointer sample.
+   *
+   * The stored third value is not the raw pressure — it is the nib pressure
+   * derived from pressure, speed and tilt together. Computing it here, once
+   * per sample, means the expensive part happens at input rate rather than on
+   * every repaint, and the stored stroke already carries its own dynamics.
+   */
+  push(x: number, y: number, pressure: number, tiltX = 0, tiltY = 0, at?: number): void {
+    // Chromium reports 0.5 for mice and 0 for some pens before contact, so a
+    // constant 0.5 means "this device has no pressure to give".
     if (pressure > 0 && pressure !== 0.5) this.sawPressure = true;
-    const p = pressure > 0 ? pressure : 0.5;
+
+    const now = at ?? this.lastAt + 8;
 
     // Drop samples that land on the previous point — they add storage and
     // produce zero-length segments that upset the outline generator.
@@ -51,13 +66,43 @@ export class StrokeBuilder {
       if (dx * dx + dy * dy < 0.01) return;
     }
 
-    this.points.push(x, y, p);
+    let speed = 0;
+    if (this.started) {
+      const dt = Math.max(1, now - this.lastAt);
+      speed = Math.hypot(x - this.lastX, y - this.lastY) / dt;
+    }
+
+    this.points.push(
+      x,
+      y,
+      nibPressure({
+        pressure,
+        hasPressure: this.sawPressure,
+        speed,
+        tilt: tiltFromEvent(tiltX, tiltY),
+      }),
+    );
+
+    this.lastX = x;
+    this.lastY = y;
+    this.lastAt = now;
+    this.started = true;
   }
 
-  /** Outline for the in-progress stroke, recomputed each frame. */
-  outline(): number[][] {
-    return getStroke(toTriples(this.points), {
-      ...strokeOptions(this.tool, this.size, this.sawPressure),
+  /**
+   * Outline for the in-progress stroke, recomputed each frame.
+   *
+   * `predicted` carries points the browser expects the pointer to reach before
+   * the next frame lands. Drawing them makes the ink appear to keep up with
+   * the nib instead of trailing it — the single largest contributor to writing
+   * feeling responsive. They are never committed, so a wrong guess costs
+   * nothing beyond one frame.
+   */
+  outline(predicted?: number[]): number[][] {
+    const points =
+      predicted && predicted.length ? this.points.concat(predicted) : this.points;
+    return getStroke(toTriples(points), {
+      ...strokeOptions(this.tool, this.size),
       last: false,
     });
   }
@@ -67,7 +112,9 @@ export class StrokeBuilder {
     if (this.length === 0) return null;
 
     // A single tap is a legitimate dot; anything else needs two points.
-    const points = simplify(this.points, 0.55);
+    // Simplify gently: the tolerance trades stored size against the fine
+    // detail that carries a stroke's character, and 0.55 was shaving it.
+    const points = simplify(this.points, 0.3);
     const bbox = bboxOf(points);
 
     return {
@@ -93,18 +140,10 @@ export function toTriples(points: number[]): number[][] {
 
 /** Final outline for a committed stroke. Memoised by the renderer. */
 export function outlineFor(stroke: Stroke): number[][] {
-  const hasPressure = strokeHasPressure(stroke.points);
   return getStroke(toTriples(stroke.points), {
-    ...strokeOptions(stroke.tool as InkTool, stroke.size, hasPressure),
+    ...strokeOptions(stroke.tool as InkTool, stroke.size),
     last: true,
   });
-}
-
-function strokeHasPressure(points: number[]): boolean {
-  for (let i = 2; i < points.length; i += POINT_STRIDE) {
-    if (points[i] > 0 && points[i] !== 0.5) return true;
-  }
-  return false;
 }
 
 /** Outline points → a fillable Path2D, closed with quadratic joins. */
