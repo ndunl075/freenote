@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider, themeScript } from "@/components/theme/ThemeProvider";
+import { StorageNotice } from "@/components/storage/StorageNotice";
 import { Toaster } from "@/components/ui";
 import "./globals.css";
 
@@ -24,6 +25,9 @@ export const metadata: Metadata = {
     "Open-source note-taking and flashcard study app. Handwriting, audio, and five study modes. No account, no cloud, no tracking.",
   applicationName: "FreeNote",
   manifest: "/manifest.webmanifest",
+  // Lets "Add to Home Screen" open FreeNote as a standalone app — which on iOS
+  // is also what exempts its stored notes from Safari's 7-day data eviction.
+  appleWebApp: { capable: true, title: "FreeNote", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
@@ -46,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen bg-[var(--bg)] text-[var(--text)] antialiased">
         <ThemeProvider>
+          <StorageNotice />
           {children}
           <Toaster />
         </ThemeProvider>

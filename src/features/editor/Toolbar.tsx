@@ -63,7 +63,7 @@ export function Toolbar({ onBack }: { onBack: () => void }) {
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--chrome-border)] bg-[var(--chrome)]/95 backdrop-blur-md">
-      <div className="flex h-14 items-center gap-2 px-3">
+      <div className="flex h-14 items-center gap-2 px-2 sm:px-3">
         <Tooltip label="Back to library">
           <IconButton label="Back to library" onClick={onBack}>
             <ChevronLeft />
@@ -87,13 +87,15 @@ export function Toolbar({ onBack }: { onBack: () => void }) {
           }}
           aria-label="Note title"
           className={cn(
-            "min-w-0 max-w-[280px] flex-1 rounded-[6px] bg-transparent px-2 py-1",
+            // Hidden on phones: the tool ribbon needs the room more than the
+            // title does, and the title is still editable from the library.
+            "hidden min-w-0 max-w-[280px] flex-1 rounded-[6px] bg-transparent px-2 py-1 md:block",
             "text-[15px] font-bold outline-none",
             "hover:bg-[var(--surface-2)] focus:bg-[var(--surface)]",
           )}
         />
 
-        <div className="mx-auto flex items-center gap-0.5 rounded-full bg-[var(--surface)] p-1 shadow-[var(--shadow-sm)]">
+        <div className="mx-auto flex min-w-0 max-w-full items-center gap-0.5 overflow-x-auto rounded-full bg-[var(--surface)] p-1 shadow-[var(--shadow-sm)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {TOOLS.map((t) => (
             <Tooltip key={t.id} label={`${t.label}  ·  ${t.shortcut}`}>
               <button
