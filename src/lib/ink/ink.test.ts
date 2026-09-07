@@ -10,7 +10,7 @@ import {
   translatePoints,
 } from "./geometry";
 import { strokesHitByEraser, selectWithLasso, selectWithRect, moveSelection } from "./selection";
-import { History, apply, invert } from "./history";
+import { History, apply, invert, type Command } from "./history";
 import { sortForPaint } from "./render";
 
 /** A horizontal line from (x0,y) to (x1,y), sampled every pixel. */
@@ -219,11 +219,11 @@ describe("history", () => {
 
   it("inverts every command type back to itself in two steps", () => {
     const stroke = line(0, 0, 10, "x");
-    const commands = [
+    const commands: Command[] = [
       { kind: "add-strokes", strokes: [stroke] },
       { kind: "remove-strokes", strokes: [stroke] },
       { kind: "move", strokeIds: ["x"], objectIds: [], dx: 5, dy: 5 },
-    ] as const;
+    ];
 
     for (const c of commands) {
       expect(invert(invert(c))).toEqual(c);
@@ -266,6 +266,7 @@ describe("history", () => {
     history.push({ kind: "add-strokes", strokes: [b] });
 
     expect(history.canRedo).toBe(false);
+    expect(page.strokes).toHaveLength(1);
   });
 
   it("undoes a move by shifting back, bbox included", () => {
