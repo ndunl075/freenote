@@ -10,9 +10,8 @@ import { PAPER_COLORS, PAPER_STYLES, defaultInkFor } from "@/lib/ink";
 import { spring } from "@/lib/motion/springs";
 import { newId } from "@/lib/utils/id";
 import { cn } from "@/lib/utils/cn";
-import { ObjectLayer } from "./ObjectLayer";
-import { PageCanvas } from "./PageCanvas";
-import { SelectionOverlay } from "./SelectionOverlay";
+import { PageNavigator } from "./PageNavigator";
+import { PageSlot } from "./PageSlot";
 import { RecordingBar } from "./RecordingBar";
 import { Toolbar } from "./Toolbar";
 import { useEditor } from "./store";
@@ -219,6 +218,13 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
     <div className="flex min-h-screen flex-col bg-[var(--bg-subtle)]">
       <Toolbar onBack={onBack} />
       <RecordingBar noteId={noteId} />
+      <PageNavigator
+        onJump={(pageId) =>
+          document
+            .getElementById(`page-${pageId}`)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      />
 
       <input
         ref={fileRef}
@@ -235,17 +241,15 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
       <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-8">
         <div className="mx-auto flex w-fit flex-col items-center gap-6">
           {pages.map((page, i) => (
-            <div key={page.id} className="group/page relative">
-              <div className="relative">
-                <PageCanvas
-                  page={page}
-                  paper={note.paper}
-                  paperColor={note.paperColor}
-                  width={pageWidth}
-                />
-                <ObjectLayer page={page} width={pageWidth} />
-                <SelectionOverlay pageId={page.id} width={pageWidth} />
-              </div>
+            <div key={page.id} id={`page-${page.id}`} className="group/page relative">
+              <PageSlot
+                page={page}
+                paper={note.paper}
+                paperColor={note.paperColor}
+                width={pageWidth}
+                height={page.height * zoom}
+                eager={i < 2}
+              />
 
               <div className="mt-2 flex items-center justify-between px-1">
                 <span className="text-[12px] font-semibold text-[var(--text-faint)]">
