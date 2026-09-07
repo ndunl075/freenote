@@ -150,6 +150,7 @@ export interface StudySet {
   sourceNoteId: ID | null;
   termLanguage: string;
   definitionLanguage: string;
+  starred: boolean;
   createdAt: number;
   updatedAt: number;
 }

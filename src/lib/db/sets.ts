@@ -39,6 +39,7 @@ export const sets = {
       sourceNoteId: input?.sourceNoteId ?? null,
       termLanguage: input?.termLanguage ?? "en",
       definitionLanguage: input?.definitionLanguage ?? "en",
+      starred: input?.starred ?? false,
       createdAt: now,
       updatedAt: now,
     };
@@ -78,6 +79,11 @@ export const sets = {
       sourceTerms.map((t) => ({ ...t, id: newId("term"), setId: copy.id })),
     );
     return copy;
+  },
+
+  async toggleStar(id: ID) {
+    const set = await db().sets.get(id);
+    if (set) await db().sets.update(id, { starred: !set.starred });
   },
 
   count: (id: ID) => db().terms.where("setId").equals(id).count(),
