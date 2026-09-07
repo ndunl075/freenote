@@ -30,6 +30,7 @@ Static export can't prerender unknown ids, so ids ride in the query string.
 /                       Library — subjects, notes, sets
 /note?id=<noteId>       Note editor
 /set?id=<setId>         Set detail
+/create-set?id=<setId>  Set editor
 /study?set=<id>&mode=…  flashcards | learn | test | match | blast
 /settings               Theme, storage, import/export
 ```
@@ -43,14 +44,15 @@ src/
     library/      subjects, dividers, note + set grids
     editor/       Notability canvas: toolbars, pages, tools
     study/        Quizlet modes, each self-contained
+    settings/     appearance, writing, studying, data
   lib/
     db/           Dexie schema, migrations, repositories
-    ink/          stroke model, renderer, hit-test, eraser, lasso
+    ink/          stroke model, renderer, hit-test, eraser, lasso, recogniser
     study/        scheduler (SM-2-lite), question generator, grading
-    media/        audio recorder, image pipeline
-    io/           JSON import/export, PDF/PNG rendering
+    media/        audio recorder, ink/audio sync
+    io/           JSON backup, PDF/PNG export, note → set extraction
     motion/       shared spring presets + variants
-  components/ui/  primitives (Button, Sheet, Dialog, Toast)
+  components/     ui/ primitives, plus menu, sheet, shell, paper, theme
 ```
 
 Rule: `features/*` may import `lib/*` and `components/*`, never each other.
@@ -79,9 +81,17 @@ PointerEvent → coalesced points → predictive smoothing
              → committed layer (static bitmap) + live layer (current stroke)
 ```
 
-Two canvases per page: a **committed** layer redrawn only on mutation, and a **live**
-layer cleared each frame. Erase and lasso hit-test against stroke bboxes first, then
-segment distance. Undo is a bounded command stack per note.
+Three canvases per page: a **committed** layer redrawn only on mutation, a **live** layer
+cleared each frame, and an **overlay** carrying the eraser cursor and lasso path. Erase and
+lasso hit-test against stroke bboxes first, then segment distance. Undo is a bounded
+inverse-command stack per page, ordered across pages so Cmd+Z always undoes the last edit.
+
+Pages mount their canvases only when near the viewport; a long note otherwise holds tens of
+megabytes of backing store it cannot see.
+
+Holding the pen still at the end of a stroke runs the shape recogniser, which snaps rough
+circles, boxes and lines to clean geometry — and returns null on anything it is not
+confident about, since a false positive destroys work.
 
 ## Study engines
 
@@ -106,7 +116,12 @@ user data.
 ## Testing
 
 - **Unit** (Vitest): ink geometry, study reducers, answer grading, import/export.
-- **E2E** (Playwright): draw → persist → reload; run each study mode end to end.
+- **E2E** (Playwright): runs against the production static export, not a dev server, since
+  "it is just static files" is the deployment story. Covers draw → persist → reload, undo,
+  erase, the library, and every study mode.
+- One E2E test asserts the app makes **no request to any host but localhost**, and CI fails
+  the build if an API route is ever emitted. The privacy claim is enforced from both ends
+  rather than documented.
 
 ## Non-goals
 
