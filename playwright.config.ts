@@ -37,7 +37,11 @@ export default defineConfig({
   webServer: {
     command: "pnpm build && npx serve out -l 4173 --no-clipboard",
     url: "http://127.0.0.1:4173",
-    reuseExistingServer: !process.env.CI,
+    // Never reuse a running server. Reuse skips the build step, which means a
+    // green run can silently reflect a stale bundle rather than the working
+    // tree — a test suite that can lie about which code it tested is worse
+    // than no suite at all.
+    reuseExistingServer: false,
     timeout: 180_000,
   },
 });
