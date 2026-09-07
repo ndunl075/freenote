@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils/cn";
 import { MODES, modeMeta } from "./modes";
 import { routes } from "./routes";
 
-/** Quizlet's "Flashcards ▾" pill — a dropdown that jumps between modes. */
+/** The "Flashcards ▾" pill in a mode's header — a dropdown that jumps between modes. */
 export function ModeMenu({ current, setId }: { current: StudyMode; setId: string }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);

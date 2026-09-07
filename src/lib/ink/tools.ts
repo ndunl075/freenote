@@ -24,7 +24,7 @@ export interface ToolPreset {
 /** Notability's ink palette. Ordered as it appears in the colour tray. */
 export const INK_COLORS = [
   "#1a1a1a",
-  "#4255ff",
+  "#007aff",
   "#e02d2d",
   "#0f9d58",
   "#f5a623",
@@ -54,7 +54,7 @@ export const ERASER_SIZES = [8, 16, 28, 44] as const;
 
 export const DEFAULT_PRESETS: ToolPreset[] = [
   { tool: "pen", color: "#1a1a1a", size: 2, opacity: 1 },
-  { tool: "pen", color: "#4255ff", size: 2, opacity: 1 },
+  { tool: "pen", color: "#007aff", size: 2, opacity: 1 },
   { tool: "pen", color: "#e02d2d", size: 3, opacity: 1 },
   { tool: "highlighter", color: "#ffe14d", size: 18, opacity: 0.4 },
 ];

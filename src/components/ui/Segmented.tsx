@@ -12,7 +12,8 @@ export interface SegmentedOption<T extends string> {
 }
 
 /**
- * Sliding pill selector — the shared layoutId gives it Quizlet's glide.
+ * Sliding pill selector — the shared layoutId lets the thumb glide between
+ * segments rather than cutting.
  *
  * Exposed as a radiogroup rather than a tablist. Every use of this control
  * picks one value from a set (theme, view mode, sort order); none of them

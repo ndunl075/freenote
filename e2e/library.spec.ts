@@ -77,6 +77,30 @@ test("a renamed note keeps its title in the library", async ({ page }) => {
   await title.fill("Organic chemistry");
   await title.press("Enter");
 
+  // Wait for the write to actually reach disk before navigating. Renaming is
+  // fire-and-forget, so a full page navigation can otherwise tear the page
+  // down mid-transaction — which made this test pass locally and fail on a
+  // slower runner. The assertion below is about the library rendering the
+  // stored title, not about how fast Dexie is.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(async () => {
+          const open = indexedDB.open("freenote");
+          const db: IDBDatabase = await new Promise((resolve) => {
+            open.onsuccess = () => resolve(open.result);
+          });
+          const rows = await new Promise<{ title: string }[]>((resolve) => {
+            const req = db.transaction("notes").objectStore("notes").getAll();
+            req.onsuccess = () => resolve(req.result);
+          });
+          db.close();
+          return rows.map((n) => n.title);
+        }),
+      { timeout: 10_000 },
+    )
+    .toContain("Organic chemistry");
+
   await page.goto("/");
   await expect(page.getByText("Organic chemistry").first()).toBeVisible({ timeout: 15_000 });
 });
