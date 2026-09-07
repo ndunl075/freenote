@@ -1,9 +1,9 @@
 import type { Transition, Variants } from "framer-motion";
 
 /**
- * Shared motion vocabulary. Quizlet's UI is spring-driven and fast: cards
- * settle in ~350ms, overlays in ~200ms, and nothing bounces so hard it reads
- * as playful-for-its-own-sake.
+ * Shared motion vocabulary. Motion here is spring-driven and restrained, the
+ * way system UI moves: cards settle in ~350ms, overlays in ~200ms, and nothing
+ * bounces hard enough to read as playful for its own sake.
  */
 
 export const spring = {
