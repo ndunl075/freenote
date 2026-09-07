@@ -54,6 +54,14 @@ export function NoteEditor({
     return () => close();
   }, [noteId, load, close]);
 
+  // A letter page is 816px wide, so on a phone it would open scrolled off the
+  // right edge. Fit it to the viewport once on mount, then leave zoom alone —
+  // this sets a sensible starting point rather than fighting the user.
+  useEffect(() => {
+    const available = window.innerWidth - 32;
+    if (available < PAGE_WIDTH) setZoom(Math.max(0.25, available / PAGE_WIDTH));
+  }, [setZoom]);
+
   // Keep the library's card art current. Regenerating on a slow interval
   // rather than per stroke keeps a rasterise off the drawing hot path.
   const revision = useEditor((s) => s.revision);
@@ -241,6 +249,7 @@ export function NoteEditor({
     );
   }
 
+  // Never wider than the viewport allows, so the page can always be reached.
   const pageWidth = Math.max(MIN_WIDTH, PAGE_WIDTH * zoom);
 
   return (

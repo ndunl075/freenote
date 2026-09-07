@@ -225,8 +225,8 @@ export function Flashcards({ set, terms, settings, onPatchTerm }: FlashcardsProp
 
               <Progress value={position} max={total} height={4} className="mt-5" />
 
-              <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                <div className="flex items-center gap-2">
+              <div className="mt-4 flex flex-col items-center gap-3 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:gap-2">
+                <div className="order-2 flex items-center gap-2 sm:order-none">
                   <Switch
                     checked={state.sorting}
                     onChange={() => dispatch({ type: "toggle-sorting" })}
@@ -237,7 +237,7 @@ export function Flashcards({ set, terms, settings, onPatchTerm }: FlashcardsProp
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 md:gap-5">
+                <div className="order-1 flex items-center gap-3 sm:order-none md:gap-5">
                   {state.sorting ? (
                     <Tooltip label="Still learning (←)">
                       <button
@@ -298,7 +298,7 @@ export function Flashcards({ set, terms, settings, onPatchTerm }: FlashcardsProp
                   )}
                 </div>
 
-                <div className="flex items-center justify-end gap-1">
+                <div className="order-3 flex items-center justify-center gap-1 sm:order-none sm:justify-end">
                   <Tooltip label="Shuffle (S)">
                     <IconButton
                       label="Shuffle"

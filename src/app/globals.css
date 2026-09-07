@@ -251,6 +251,25 @@ h4 {
   border-radius: 6px;
 }
 
+/* Touch devices get larger hit areas. 28px is comfortable with a cursor and
+   frustrating with a thumb; Apple's guidance is 44px, and 40 is a workable
+   compromise that does not force the toolbars to re-flow. */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  a[href],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 40px;
+  }
+
+  /* Round controls stay round rather than becoming pills. */
+  button.rounded-full,
+  [role="button"].rounded-full {
+    min-width: 40px;
+  }
+}
+
 /* Keep the ink canvas from being hijacked by browser gestures. */
 .ink-surface {
   touch-action: none;

@@ -60,6 +60,18 @@ they're gone. So FreeNote has a one-click **Back up everything** button that sav
 notes and sets to a single file — keep that file somewhere safe, and you can restore
 everything, or move it to another computer.
 
+### On iPhone and iPad, please add it to your Home Screen
+
+This part matters. **Safari deletes a website's saved data after 7 days without a visit.**
+That is Apple's policy for every website, not something FreeNote can opt out of — and for a
+notes app it would mean losing your work over a long holiday.
+
+Adding FreeNote to your Home Screen exempts it from that rule. Tap **Share**, then **Add to
+Home Screen**. It then opens like a normal app and keeps your notes indefinitely. FreeNote
+shows you a reminder about this the first time you open it on an iPhone or iPad.
+
+Even then, take a backup now and again. It is one tap and one file.
+
 ## What you can do
 
 ### Taking notes
