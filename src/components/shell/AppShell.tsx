@@ -1,13 +1,11 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import { Library as LibraryIcon, Monitor, Moon, Settings as SettingsIcon, Sun } from "lucide-react";
+import { Library as LibraryIcon, Settings as SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { useTheme, type ThemeChoice } from "@/components/theme/ThemeProvider";
-import { IconButton } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 
 const NAV = [
@@ -16,8 +14,9 @@ const NAV = [
 ];
 
 /**
- * The frame every top-level page sits in: wordmark, primary navigation, theme
- * toggle. `MotionConfig reducedMotion="user"` here means every Framer Motion
+ * The frame every top-level page sits in: wordmark and primary navigation.
+ * Theme lives in Settings rather than the nav bar, so the chrome stays quiet.
+ * `MotionConfig reducedMotion="user"` here means every Framer Motion
  * animation below honours the OS "reduce motion" setting without each
  * component having to check.
  */
@@ -104,7 +103,6 @@ export function AppShell({
                   );
                 })}
               </nav>
-              <ThemeToggle />
             </div>
           </div>
         </header>
@@ -114,22 +112,5 @@ export function AppShell({
         </main>
       </div>
     </MotionConfig>
-  );
-}
-
-const NEXT_THEME: Record<ThemeChoice, ThemeChoice> = { system: "light", light: "dark", dark: "system" };
-const THEME_LABEL: Record<ThemeChoice, string> = { system: "System", light: "Light", dark: "Dark" };
-
-export function ThemeToggle() {
-  const choice = useTheme((s) => s.choice);
-  const set = useTheme((s) => s.set);
-  const Icon = choice === "light" ? Sun : choice === "dark" ? Moon : Monitor;
-  return (
-    <IconButton
-      label={`Theme: ${THEME_LABEL[choice]} — switch to ${THEME_LABEL[NEXT_THEME[choice]]}`}
-      onClick={() => set(NEXT_THEME[choice])}
-    >
-      <Icon />
-    </IconButton>
   );
 }
