@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import type { Page, PaperColor, PaperStyle } from "@/lib/db";
+import type { NoteObject, Page, PaperColor, PaperStyle } from "@/lib/db";
 import { PAGE_WIDTH } from "@/lib/db";
+import { newId } from "@/lib/utils/id";
 import {
   StrokeBuilder,
   clearCanvas,
@@ -10,6 +11,7 @@ import {
   drawPaper,
   drawStrokes,
   prepareCanvas,
+  recognizeShape,
   selectWithLasso,
   strokesHitByEraser,
   type InkTool,
@@ -28,6 +30,42 @@ import { useRecording } from "./recordingStore";
    Splitting them is the whole performance story: without it, drawing the 900th
    stroke would repaint the previous 899 on every pointermove.
    ========================================================================= */
+
+/** How long the pen must sit still before a stroke is treated as a shape. */
+const HOLD_TO_SNAP_MS = 450;
+
+/** Converts a recognised shape into a placeable note object. */
+function toShapeObject(
+  shape: NonNullable<ReturnType<typeof recognizeShape>>,
+  color: string,
+  strokeWidth: number,
+): NoteObject {
+  const base = { kind: "shape" as const, id: newId("obj"), color, strokeWidth, fill: null };
+
+  if (shape.kind === "rect") {
+    return { ...base, shape: "rect", x: shape.x, y: shape.y, width: shape.width, height: shape.height };
+  }
+  if (shape.kind === "ellipse") {
+    return {
+      ...base,
+      shape: "ellipse",
+      x: shape.cx - shape.rx,
+      y: shape.cy - shape.ry,
+      width: shape.rx * 2,
+      height: shape.ry * 2,
+    };
+  }
+  // The line renderer draws bottom-left to top-right inside its box, so the
+  // box is the segment's bounding rectangle.
+  return {
+    ...base,
+    shape: "line",
+    x: Math.min(shape.x1, shape.x2),
+    y: Math.min(shape.y1, shape.y2),
+    width: Math.abs(shape.x2 - shape.x1),
+    height: Math.abs(shape.y2 - shape.y1),
+  };
+}
 
 interface PageCanvasProps {
   page: Page;
@@ -48,6 +86,12 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   const activePointerRef = useRef<number | null>(null);
   /** Strokes erased during the current swipe, so we only commit once on lift. */
   const pendingEraseRef = useRef<Set<string>>(new Set());
+  /**
+   * When the pointer last actually moved — a dwell before lift means "snap".
+   * Read from the event's own timeStamp rather than a clock, so it records
+   * when the input happened rather than when the handler got scheduled.
+   */
+  const lastMotionRef = useRef(0);
 
   const height = page.height;
   const revision = useEditor((s) => s.revision);
@@ -208,6 +252,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
         isHl ? state.highlighterColor : state.color,
         isHl ? state.highlighterSize : state.size,
       );
+      lastMotionRef.current = e.nativeEvent.timeStamp;
       // The stylus's own eraser end maps to the eraser regardless of tool.
       builderRef.current.push(x, y, e.pressure);
     }
@@ -231,7 +276,15 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       const [x, y] = toPage(ev.clientX, ev.clientY);
       if (state.tool === "eraser") eraserPathRef.current.push(x, y);
       else if (state.tool === "lasso") lassoPathRef.current.push(x, y);
-      else builderRef.current?.push(x, y, ev.pressure);
+      else {
+        const before = builderRef.current?.length ?? 0;
+        builderRef.current?.push(x, y, ev.pressure);
+        // push() drops samples that land on the previous point, so a growing
+        // length is exactly "the pen actually moved".
+        if ((builderRef.current?.length ?? 0) > before) {
+          lastMotionRef.current = ev.timeStamp;
+        }
+      }
     }
 
     if (state.tool === "eraser") applyErase();
@@ -271,10 +324,26 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       eraserPathRef.current = [];
       pendingEraseRef.current.clear();
     } else {
-      // Stamp the audio offset so playback can replay this stroke in time.
-      const stroke = builderRef.current?.commit(useRecording.getState().offsetForStroke());
+      const builder = builderRef.current;
+      const held = e.nativeEvent.timeStamp - lastMotionRef.current;
+
+      // Hold the pen still at the end of a stroke and freenote snaps it to a
+      // clean shape, the way Notability does. Only after a deliberate dwell:
+      // snapping on every stroke would mangle handwriting.
+      const snapped =
+        builder && held >= HOLD_TO_SNAP_MS && builder.tool !== "highlighter"
+          ? recognizeShape(builder.raw)
+          : null;
+
       builderRef.current = null;
-      if (stroke) store.commitStroke(page.id, stroke);
+
+      if (snapped && builder) {
+        store.addObject(page.id, toShapeObject(snapped, builder.color, builder.size));
+      } else {
+        // Stamp the audio offset so playback can replay this stroke in time.
+        const stroke = builder?.commit(useRecording.getState().offsetForStroke());
+        if (stroke) store.commitStroke(page.id, stroke);
+      }
     }
 
     requestPaint();
