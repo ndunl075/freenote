@@ -18,7 +18,16 @@ import { useEditor } from "./store";
 
 const MIN_WIDTH = 320;
 
-export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => void }) {
+export function NoteEditor({
+  noteId,
+  onBack,
+  autoRecord = false,
+}: {
+  noteId: string;
+  onBack: () => void;
+  /** Opened from "Record a lecture" — start capturing as soon as we are ready. */
+  autoRecord?: boolean;
+}) {
   const load = useEditor((s) => s.load);
   const close = useEditor((s) => s.close);
   const loading = useEditor((s) => s.loading);
@@ -237,7 +246,7 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg-subtle)]">
       <Toolbar onBack={onBack} />
-      <RecordingBar noteId={noteId} />
+      <RecordingBar noteId={noteId} autoStart={autoRecord} />
       <PageNavigator
         onJump={(pageId) =>
           document

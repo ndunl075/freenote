@@ -1,22 +1,24 @@
 <div align="center">
 
-# freenote
+# FreeNote
 
 **Handwritten notes and flashcard study, in one app that keeps everything on your device.**
 
 No account. No cloud. No tracking. No subscription.
 
+### [→ Open FreeNote](https://freenote-theta.vercel.app/)
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fndunl075%2Ffreenote)
 
-<img src="docs/screenshots/library.png" alt="The freenote library, showing subjects in a sidebar and a grid of notes and study sets" width="820">
+<img src="docs/screenshots/library.png" alt="The FreeNote library, showing subjects in a sidebar and a grid of notes and study sets" width="820">
 
 </div>
 
 ---
 
-## What is freenote?
+## What is FreeNote?
 
-freenote is a free, open-source app for taking notes and studying them.
+FreeNote is a free, open-source app for taking notes and studying them.
 
 It does two things:
 
@@ -32,13 +34,13 @@ getting wrong, a practice Test, a timed Match game, and an arcade mode called Bl
 Both halves live in one app and look like one app — the study screens use the same calm,
 paper-first interface as the note editor, not a separate visual identity bolted on.
 
-If you've used Notability, freenote will feel immediately familiar. That's on purpose.
+If you've used Notability, FreeNote will feel immediately familiar. That's on purpose.
 
 ## The part that makes it different
 
 **Your notes never leave your computer.**
 
-Most study apps store your work on their servers. freenote doesn't have servers. Everything
+Most study apps store your work on their servers. FreeNote doesn't have servers. Everything
 you write is saved inside your own web browser, on your own device, and it physically cannot
 go anywhere else — there's no code in the app that sends data out, and the test suite checks
 that every time we change anything.
@@ -54,7 +56,7 @@ What this means for you:
 
 The trade-off is honest and worth knowing up front: **your notes live in one browser on one
 device.** They don't sync to your phone automatically. If you clear your browser's site data,
-they're gone. So freenote has a one-click **Back up everything** button that saves all your
+they're gone. So FreeNote has a one-click **Back up everything** button that saves all your
 notes and sets to a single file — keep that file somewhere safe, and you can restore
 everything, or move it to another computer.
 
@@ -62,7 +64,7 @@ everything, or move it to another computer.
 
 ### Taking notes
 
-<img src="docs/screenshots/editor.png" alt="The freenote note editor with a tool ribbon, colour tray and ruled paper" width="820">
+<img src="docs/screenshots/editor.png" alt="The FreeNote note editor with a tool ribbon, colour tray and ruled paper" width="820">
 
 - **Write by hand** with pressure-sensitive ink that thickens and thins like a real pen
 - **Highlight** in six colours — highlighter always goes *behind* your writing, so it never
@@ -97,8 +99,7 @@ everything, or move it to another computer.
 
 ## Trying it out
 
-freenote runs at whatever web address it's been published to — just open the link, and you're
-in. Nothing to install, nothing to sign up for. Add it to your home screen and it behaves like
+FreeNote is live at **<https://freenote-theta.vercel.app/>** — just open it and start writing. Nothing to install, nothing to sign up for. Add it to your home screen and it behaves like
 an ordinary app.
 
 **On a tablet with a stylus,** turn on *Palm rejection* in Settings so you can rest your hand
@@ -106,7 +107,7 @@ on the screen while you write.
 
 ## Running your own copy
 
-You don't need to do this to use freenote — but since it's open source, you can.
+You don't need to do this to use FreeNote — but since it's open source, you can.
 
 **If you just want it hosted for free:** press the *Deploy with Vercel* button at the top of
 this page. It copies the project to your own GitHub account and puts it online, usually in
@@ -157,7 +158,7 @@ runtime, which is what makes the privacy guarantee structural rather than a poli
 
 ## A note on the app that inspired this
 
-freenote is an independent, open-source project. It is not affiliated with, endorsed by, or
+FreeNote is an independent, open-source project. It is not affiliated with, endorsed by, or
 connected to Notability in any way. Notability is a good app; this is a free alternative for
 people who would rather keep their notes on their own device.
 

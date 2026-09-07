@@ -3,22 +3,40 @@
 /* ============================================================================
    freenote design tokens
 
-   The whole app — notes and study alike — follows Notability's visual
-   language: warm neutral greys, a calm system blue, soft rounded surfaces, and
-   type that reads as an interface rather than a brand. Nothing shouts.
+   Notability's interface is friendlier and chunkier than plain system chrome:
+   heavy rounded display headings, pastel tinted action cards with matching
+   coloured borders, a periwinkle-indigo accent, and neutral grey selection
+   states rather than blue ones. Corners are generous throughout.
 
-   Notability's chrome is essentially clean iOS system UI with paper warmth, so
-   the palette leans on iOS system colours and neutral charcoals rather than a
-   saturated brand hue.
+   The palette below is read off Notability itself rather than borrowed from
+   iOS — the earlier iOS-system reading of it was wrong and made the app look
+   flatter and colder than the thing it is modelled on.
    ========================================================================= */
 
 :root {
-  /* Accent ---------------------------------------------------------------- */
-  --brand: #007aff;
-  --brand-hover: #0a6fe0;
-  --brand-active: #0059c2;
-  --brand-soft: #e8f1ff;
+  /* Accent — periwinkle indigo, not system blue ---------------------------- */
+  --brand: #4c6ef5;
+  --brand-hover: #4361e0;
+  --brand-active: #3950c4;
+  --brand-soft: #eef2ff;
   --brand-ink: #ffffff;
+
+  /* Neutral selection fill. Notability highlights the current row in grey,
+     which keeps the accent colour meaningful where it does appear. */
+  --select: #e8e8ec;
+  --select-text: #1c1c1e;
+
+  /* Pastel tints for quick-action tiles. Each pairs a wash with a border a
+     couple of steps darker, which is what stops them reading as flat blocks. */
+  --tint-blue: #f4f7ff;
+  --tint-blue-line: #c3d4ff;
+  --tint-blue-ink: #3950c4;
+  --tint-amber: #fff6e9;
+  --tint-amber-line: #f0cf9c;
+  --tint-amber-ink: #94631a;
+  --tint-indigo: #e9efff;
+  --tint-indigo-line: #cad8ff;
+  --tint-indigo-ink: #3950c4;
 
   /* Surfaces --------------------------------------------------------------
      Warm neutral greys, not the cool blue-greys of a study app. */
@@ -74,11 +92,24 @@
 }
 
 .dark {
-  --brand: #409cff;
-  --brand-hover: #55a8ff;
-  --brand-active: #6fb6ff;
-  --brand-soft: #16324f;
-  --brand-ink: #06121f;
+  --brand: #8b9cff;
+  --brand-hover: #9dabff;
+  --brand-active: #b0bbff;
+  --brand-soft: #23264a;
+  --brand-ink: #0f1130;
+
+  --select: #303036;
+  --select-text: #f2f2f5;
+
+  --tint-blue: #1c2140;
+  --tint-blue-line: #333c66;
+  --tint-blue-ink: #b3c2ff;
+  --tint-amber: #33280f;
+  --tint-amber-line: #5c4620;
+  --tint-amber-ink: #f0cf9c;
+  --tint-indigo: #212648;
+  --tint-indigo-line: #3a4272;
+  --tint-indigo-ink: #b3c2ff;
 
   /* Neutral charcoal, not navy. */
   --bg: #131315;
@@ -156,6 +187,10 @@
   --color-star: var(--star);
   --color-star-bg: var(--star-bg);
   --color-track: var(--track);
+  --color-select: var(--select);
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-amber: var(--tint-amber);
+  --color-tint-indigo: var(--tint-indigo);
   --color-inverse-surface: var(--inverse-surface);
   --color-inverse-text: var(--inverse-text);
 
@@ -164,17 +199,18 @@
   --color-chrome: var(--chrome);
   --color-chrome-border: var(--chrome-border);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
 
   --shadow-card: var(--shadow-sm);
   --shadow-pop: var(--shadow-md);
   --shadow-float: var(--shadow-lg);
   --shadow-modal: var(--shadow-xl);
 
-  /* Generous iOS-style corner radii. */
-  --radius-card: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  /* Generous, chunky corners. */
+  --radius-card: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
 
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -193,19 +229,22 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
 }
 
-/* Interface headings: firm, not heavy. Notability's chrome never shouts. */
+/* Headings carry Notability's voice: a heavy rounded display face, set tight.
+   This is the single strongest signal of the interface, so it is applied
+   globally rather than per component. */
 h1,
 h2,
 h3,
 h4 {
-  font-weight: 650;
-  letter-spacing: -0.014em;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 :focus-visible {

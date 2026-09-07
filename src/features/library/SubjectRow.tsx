@@ -114,7 +114,7 @@ export function SubjectRow({
         "group/row relative flex h-9 items-center gap-1 rounded-[8px] pr-1 transition-colors duration-100",
         depth === 1 ? "pl-2" : "pl-0.5",
         selected
-          ? "bg-[var(--brand-soft)] text-[var(--brand)]"
+          ? "bg-[var(--select)] text-[var(--select-text)]"
           : "text-[var(--text)] hover:bg-[var(--surface-2)]",
       )}
     >
@@ -167,7 +167,7 @@ export function SubjectRow({
       >
         <span
           aria-hidden
-          className={cn("block rounded-[3px]", depth === 0 ? "h-3.5 w-3.5" : "h-2.5 w-2.5 rounded-full")}
+          className={cn("block rounded-full", depth === 0 ? "h-3.5 w-3.5" : "h-2.5 w-2.5")}
           style={{ background: subject.color }}
         />
       </button>
@@ -202,7 +202,7 @@ export function SubjectRow({
         <span
           className={cn(
             "shrink-0 text-[12px] font-semibold tabular-nums transition-opacity",
-            selected ? "text-[var(--brand)]" : "text-[var(--text-faint)]",
+            selected ? "text-[var(--text-muted)]" : "text-[var(--text-faint)]",
             "group-hover/row:opacity-0 group-focus-within/row:opacity-0",
           )}
           aria-label={`${count} items`}

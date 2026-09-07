@@ -52,10 +52,12 @@ export function AppShell({
             <Link
               href="/"
               className="flex items-center gap-2 rounded-[8px] px-1.5 py-1 transition-colors hover:bg-[var(--surface-2)]"
-              aria-label="freenote home"
+              aria-label="FreeNote home"
             >
               <Image src="/icon.svg" alt="" width={28} height={28} priority className="rounded-[7px]" />
-              <span className="text-[19px] font-semibold tracking-[-0.02em]">freenote</span>
+              <span className="font-[family-name:var(--font-display)] text-[20px] font-extrabold tracking-[-0.03em]">
+                FreeNote
+              </span>
             </Link>
 
             <nav aria-label="Primary" className="ml-1 hidden items-center gap-0.5 sm:flex">
@@ -69,7 +71,7 @@ export function AppShell({
                     className={cn(
                       "inline-flex h-9 items-center gap-2 rounded-full px-3.5 text-[14px] font-bold transition-colors",
                       active
-                        ? "bg-[var(--brand-soft)] text-[var(--brand)]"
+                        ? "bg-[var(--select)] text-[var(--select-text)]"
                         : "text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]",
                     )}
                   >
@@ -94,7 +96,7 @@ export function AppShell({
                       className={cn(
                         "inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors",
                         active
-                          ? "bg-[var(--brand-soft)] text-[var(--brand)]"
+                          ? "bg-[var(--select)] text-[var(--select-text)]"
                           : "text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]",
                       )}
                     >

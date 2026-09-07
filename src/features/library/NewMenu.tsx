@@ -87,5 +87,10 @@ export function useCreateActions() {
       const set = await createSet(subjectId);
       router.push(`/set?id=${encodeURIComponent(set.id)}`);
     },
+    /** New note that starts recording as soon as the editor opens. */
+    newRecording: async () => {
+      const note = await createNote(subjectId);
+      router.push(`/note?id=${encodeURIComponent(note.id)}&record=1`);
+    },
   };
 }

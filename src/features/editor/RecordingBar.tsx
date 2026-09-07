@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Mic, Pause, Play, Square, Trash2, X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IconButton, Tooltip, toast } from "@/components/ui";
 import { activityHistogram } from "@/lib/media/playback";
 import { spring } from "@/lib/motion/springs";
@@ -15,7 +15,7 @@ import { useRecording } from "./recordingStore";
  * audio, so playback can replay handwriting in time and the scrubber can show
  * an activity histogram of where note-taking was densest.
  */
-export function RecordingBar({ noteId }: { noteId: string }) {
+export function RecordingBar({ noteId, autoStart = false }: { noteId: string; autoStart?: boolean }) {
   const supported = useRecording((s) => s.supported);
   const status = useRecording((s) => s.status);
   const elapsed = useRecording((s) => s.elapsed);
@@ -43,6 +43,15 @@ export function RecordingBar({ noteId }: { noteId: string }) {
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
+
+  // Arriving from the "Record a lecture" tile starts capture once, after the
+  // supported check has run. Guarded by a ref so a re-render cannot restart it.
+  const autoStarted = useRef(false);
+  useEffect(() => {
+    if (!autoStart || autoStarted.current || !supported || status !== "idle") return;
+    autoStarted.current = true;
+    void start(noteId);
+  }, [autoStart, supported, status, start, noteId]);
 
   if (!supported && recordings.length === 0) return null;
 

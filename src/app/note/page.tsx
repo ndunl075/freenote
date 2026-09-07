@@ -14,7 +14,13 @@ function NoteRoute() {
     router.replace("/");
     return <FullPageSpinner />;
   }
-  return <NoteEditor noteId={id} onBack={() => router.push("/")} />;
+  return (
+    <NoteEditor
+      noteId={id}
+      autoRecord={params.get("record") === "1"}
+      onBack={() => router.push("/")}
+    />
+  );
 }
 
 // Static export prerenders this shell; the note id arrives from the query

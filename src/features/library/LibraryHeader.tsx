@@ -1,15 +1,16 @@
 "use client";
 
-import { ArrowUpDown, LayoutGrid, List, Search, X } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, List } from "lucide-react";
 import { Menu, useMenu, type MenuEntry } from "@/components/menu/Menu";
 import { Segmented } from "@/components/ui";
 import { cn } from "@/lib/utils/cn";
 import { pluralize } from "@/lib/utils/format";
 import { NewMenu } from "./NewMenu";
 import { sectionTitle, SORT_LABELS, type SortKey, type ViewMode } from "./logic";
+import { SEARCH_INPUT_ID } from "./LibrarySearch";
 import { useLibrary } from "./store";
 
-export const SEARCH_INPUT_ID = "library-search";
+export { SEARCH_INPUT_ID };
 
 const SORT_KEYS: SortKey[] = ["updated", "title", "created"];
 
@@ -17,7 +18,6 @@ export function LibraryHeader({ count, onImport }: { count: number; onImport: ()
   const section = useLibrary((s) => s.section);
   const subjects = useLibrary((s) => s.subjects);
   const query = useLibrary((s) => s.query);
-  const setQuery = useLibrary((s) => s.setQuery);
   const sort = useLibrary((s) => s.sort);
   const setSort = useLibrary((s) => s.setSort);
   const view = useLibrary((s) => s.view);
@@ -57,57 +57,6 @@ export function LibraryHeader({ count, onImport }: { count: number; onImport: ()
       </div>
 
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-        <form
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-          className="relative min-w-[200px] flex-1 basis-[240px]"
-        >
-          <Search
-            aria-hidden
-            className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[var(--text-faint)]"
-          />
-          <input
-            id={SEARCH_INPUT_ID}
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape" && query) {
-                e.preventDefault();
-                setQuery("");
-              }
-            }}
-            placeholder="Search notes and sets"
-            aria-label="Search notes and sets by title"
-            autoComplete="off"
-            className={cn(
-              "h-11 w-full rounded-full border border-[var(--border)] bg-[var(--surface)] pl-10 pr-10",
-              "text-[15px] text-[var(--text)] placeholder:text-[var(--text-faint)]",
-              "outline-none transition-colors focus:border-[var(--brand)]",
-              "[&::-webkit-search-cancel-button]:hidden",
-            )}
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery("")}
-              aria-label="Clear search"
-              className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-          <kbd
-            aria-hidden
-            className={cn(
-              "pointer-events-none absolute right-3.5 top-1/2 hidden -translate-y-1/2 rounded-[5px] border border-[var(--border)]",
-              "px-1.5 py-0.5 font-sans text-[11px] font-bold text-[var(--text-faint)] md:block",
-              query && "md:hidden",
-            )}
-          >
-            /
-          </kbd>
-        </form>
 
         <div className="ml-auto flex items-center gap-2">
           <Segmented<ViewMode>
