@@ -295,7 +295,7 @@ function RenameField({
       aria-label={`Rename ${subject.name}`}
       maxLength={80}
       className={cn(
-        "h-7 min-w-0 flex-1 rounded-[6px] border-2 border-[var(--brand)] bg-[var(--surface)] px-1.5",
+        "h-7 min-w-0 flex-1 rounded-[6px] border border-[var(--brand)] bg-[var(--surface)] px-1.5",
         "text-[14px] font-semibold text-[var(--text)] outline-none",
       )}
     />

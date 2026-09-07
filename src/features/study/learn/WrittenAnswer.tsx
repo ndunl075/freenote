@@ -59,7 +59,7 @@ export function WrittenAnswer({
           autoCapitalize="off"
           spellCheck={false}
           className={cn(
-            "h-14 w-full rounded-[8px] border-2 border-[var(--border)] bg-[var(--surface)] px-4 text-[18px]",
+            "h-14 w-full rounded-[8px] border border-[var(--border)] bg-[var(--surface)] px-4 text-[18px]",
             "text-[var(--text)] outline-none transition-colors placeholder:text-[var(--text-faint)] focus:border-[var(--brand)]",
           )}
         />
@@ -135,7 +135,7 @@ export function AnswerBox({ tone, label, text }: { tone: "correct" | "incorrect"
   return (
     <div
       className={cn(
-        "rounded-[12px] border-2 px-4 py-3",
+        "rounded-[12px] border px-4 py-3",
         tone === "correct"
           ? "border-[var(--correct)] bg-[var(--correct-bg)]"
           : "border-[var(--incorrect)] bg-[var(--incorrect-bg)]",

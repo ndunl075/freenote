@@ -347,7 +347,7 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
                     aria-label={c.label}
                     onClick={() => void useEditor.getState().setPaper(note.paper, c.id)}
                     className={cn(
-                      "h-7 w-7 rounded-full border-2 transition-transform hover:scale-110",
+                      "h-7 w-7 rounded-full border transition-transform hover:scale-110",
                       note.paperColor === c.id
                         ? "border-[var(--brand)]"
                         : "border-[var(--border)]",

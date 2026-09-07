@@ -8,7 +8,7 @@ const field =
   "w-full bg-transparent text-[var(--text)] placeholder:text-[var(--text-faint)] " +
   "outline-none transition-colors duration-150";
 
-/** Quizlet's inputs are underline-first: a 2px rule that goes brand on focus. */
+/** Notability's fields are boxed and quiet, with a hairline that tints on focus. */
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, ...rest }, ref) {
     return (
@@ -16,8 +16,8 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
         ref={ref}
         className={cn(
           field,
-          "border-b-2 border-[var(--border)] px-1 pb-2 pt-1 text-[16px]",
-          "focus:border-[var(--brand)]",
+          "h-10 rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[15px]",
+          "focus:border-[var(--brand)] focus:bg-[var(--surface)]",
           className,
         )}
         {...rest}
@@ -35,8 +35,8 @@ export const Textarea = forwardRef<
       ref={ref}
       className={cn(
         field,
-        "resize-none rounded-[8px] border-2 border-[var(--border)] p-3 text-[15px]",
-        "focus:border-[var(--brand)]",
+        "resize-none rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] p-3 text-[15px]",
+        "focus:border-[var(--brand)] focus:bg-[var(--surface)]",
         className,
       )}
       {...rest}
@@ -52,8 +52,8 @@ export const BoxInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInp
         ref={ref}
         className={cn(
           field,
-          "h-11 rounded-[8px] border-2 border-[var(--border)] px-3 text-[15px]",
-          "focus:border-[var(--brand)]",
+          "h-10 rounded-[10px] border border-[var(--border)] bg-[var(--surface-2)] px-3 text-[15px]",
+          "focus:border-[var(--brand)] focus:bg-[var(--surface)]",
           className,
         )}
         {...rest}

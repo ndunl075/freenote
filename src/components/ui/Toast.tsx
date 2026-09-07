@@ -60,7 +60,7 @@ export function Toaster() {
                   ? "var(--correct-text)"
                   : t.tone === "error"
                     ? "var(--incorrect-text)"
-                    : "#0a092d",
+                    : "var(--inverse-surface)",
               color: "#fff",
             }}
           >

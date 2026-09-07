@@ -119,8 +119,8 @@ export function SetDetail({ id }: { id: string }) {
 
       <motion.header variants={riseIn} className="mt-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[30px] leading-[1.1] md:text-[40px]">{set.title}</h1>
-          <p className="mt-2 text-[14px] font-semibold text-[var(--text-muted)]">
+          <h1 className="text-[24px] leading-[1.15] md:text-[30px]">{set.title}</h1>
+          <p className="mt-1.5 text-[13px] text-[var(--text-muted)]">
             {pluralize(terms.length, "term")} · Updated {relativeTime(set.updatedAt)}
           </p>
           {set.description && (
@@ -132,7 +132,7 @@ export function SetDetail({ id }: { id: string }) {
             <Link
               href={routes.edit(set.id)}
               aria-label="Edit set"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--border)] text-[var(--text)] transition-colors hover:bg-[var(--surface-2)]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text)] transition-colors hover:bg-[var(--surface-2)]"
             >
               <Pencil className="h-4 w-4" />
             </Link>
@@ -142,7 +142,7 @@ export function SetDetail({ id }: { id: string }) {
             aria-haspopup="menu"
             aria-expanded={menu}
             onClick={() => setMenu((v) => !v)}
-            className="border-2 border-[var(--border)] text-[var(--text)]"
+            className="border border-[var(--border)] text-[var(--text)]"
           >
             <MoreHorizontal />
           </IconButton>
@@ -304,7 +304,7 @@ function PreviewDeck({
   });
 
   const circle =
-    "inline-flex h-11 w-11 items-center justify-center rounded-full border-2 border-[var(--border)] " +
+    "inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] " +
     "text-[var(--text)] transition-colors hover:bg-[var(--surface-2)] disabled:opacity-30 disabled:pointer-events-none";
 
   return (

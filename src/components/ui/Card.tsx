@@ -3,7 +3,7 @@
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils/cn";
 
-/** Quizlet's set/term cards: flat 8px surface, subtle border, lift on hover. */
+/** Notability's cards: soft 14px corners, hairline border, a gentle hover tint. */
 export function Card({
   className,
   interactive,
@@ -12,11 +12,11 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-[12px] border border-[var(--border-soft)] bg-[var(--surface)]",
+        "rounded-[14px] border border-[var(--border-soft)] bg-[var(--surface)]",
         "shadow-[var(--shadow-sm)]",
         interactive &&
-          "cursor-pointer transition-all duration-150 hover:-translate-y-[2px] " +
-            "hover:border-[var(--border)] hover:shadow-[var(--shadow-md)]",
+          "cursor-pointer transition-all duration-150 " +
+            "hover:border-[var(--border)] hover:bg-[var(--surface-2)] hover:shadow-[var(--shadow-md)]",
         className,
       )}
       {...rest}

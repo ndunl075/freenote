@@ -112,7 +112,7 @@ export const QuestionCard = forwardRef<
                 placeholder={`Type the ${answerLabel(q.promptSide)}`}
                 autoComplete="off"
                 className={cn(
-                  "h-14 w-full rounded-[8px] border-2 border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-[17px]",
+                  "h-14 w-full rounded-[8px] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-[17px]",
                   "text-[var(--text)] outline-none transition-colors placeholder:text-[var(--text-faint)] focus:border-[var(--brand)]",
                 )}
               />
@@ -136,7 +136,7 @@ export const QuestionCard = forwardRef<
                       variants={rowIn}
                       onClick={() => onChange(opt)}
                       className={cn(
-                        "flex min-h-[60px] items-center gap-3 rounded-[8px] border-2 px-4 py-3 text-left text-[16px] font-medium transition-colors",
+                        "flex min-h-[60px] items-center gap-3 rounded-[8px] border px-4 py-3 text-left text-[16px] font-medium transition-colors",
                         selected
                           ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--text)]"
                           : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]",
@@ -144,7 +144,7 @@ export const QuestionCard = forwardRef<
                     >
                       <span
                         className={cn(
-                          "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-[12px] font-bold",
+                          "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[12px] font-bold",
                           selected ? "border-[var(--brand)] bg-[var(--brand)] text-[var(--brand-ink)]" : "border-[var(--border)] text-[var(--text-muted)]",
                         )}
                         aria-hidden
@@ -161,7 +161,7 @@ export const QuestionCard = forwardRef<
 
           {q.kind === "true-false" && (
             <div className="mt-5">
-              <div className="rounded-[12px] border-2 border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-3">
+              <div className="rounded-[12px] border border-[var(--border-soft)] bg-[var(--surface-2)] px-4 py-3">
                 <p className="text-[12px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
                   {sideLabel(q.promptSide === "term" ? "definition" : "term")}
                 </p>
@@ -178,7 +178,7 @@ export const QuestionCard = forwardRef<
                       aria-checked={selected}
                       onClick={() => onChange(v)}
                       className={cn(
-                        "h-14 rounded-[8px] border-2 text-[16px] font-bold transition-colors",
+                        "h-14 rounded-[8px] border text-[16px] font-bold transition-colors",
                         selected
                           ? "border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--text)]"
                           : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]",
@@ -228,7 +228,7 @@ function MatchingBody({
                 onBlur={() => setFocused(null)}
                 onChange={(e) => onChange({ ...value, [pair.id]: e.target.value })}
                 className={cn(
-                  "h-11 w-full rounded-[8px] border-2 bg-[var(--surface)] px-3 text-[15px] font-medium text-[var(--text)] outline-none",
+                  "h-11 w-full rounded-[8px] border bg-[var(--surface)] px-3 text-[15px] font-medium text-[var(--text)] outline-none",
                   chosen ? "border-[var(--brand)]" : "border-[var(--border)]",
                   focused === pair.id && "border-[var(--brand)]",
                 )}

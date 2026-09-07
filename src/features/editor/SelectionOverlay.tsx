@@ -64,10 +64,10 @@ export function SelectionOverlay({ pageId, width }: { pageId: string; width: num
               window.addEventListener("pointermove", move);
               window.addEventListener("pointerup", up);
             }}
-            className="h-full w-full cursor-move rounded-[4px] border-2 border-dashed border-[var(--brand)] bg-[var(--brand)]/5"
+            className="h-full w-full cursor-move rounded-[4px] border border-dashed border-[var(--brand)] bg-[var(--brand)]/5"
           />
 
-          <div className="absolute -top-12 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full bg-[#0a092d] px-2 py-1.5 shadow-[var(--shadow-lg)]">
+          <div className="absolute -top-12 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full bg-[var(--inverse-surface)] px-2 py-1.5 shadow-[var(--shadow-lg)]">
             <ActionButton label="Duplicate" onClick={() => nudge(16, 16)}>
               <Copy className="h-4 w-4" />
             </ActionButton>

@@ -24,7 +24,7 @@ export function ModeTiles({ setId, className }: { setId: string; className?: str
             href={routes.study(setId, m.id)}
             title={m.blurb}
             className={cn(
-              "group flex h-[64px] items-center gap-3 rounded-[12px] border-2 border-[var(--border-soft)]",
+              "group flex h-[64px] items-center gap-3 rounded-[12px] border border-[var(--border-soft)]",
               "bg-[var(--surface)] px-4 text-[16px] font-bold text-[var(--text)] shadow-[var(--shadow-sm)]",
               "transition-[transform,box-shadow,border-color] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)]",
               "hover:-translate-y-[3px] hover:border-[var(--border)] hover:shadow-[var(--shadow-md)]",

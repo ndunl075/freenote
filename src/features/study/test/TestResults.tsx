@@ -50,7 +50,7 @@ export function TestResults({
         className="grid items-center gap-6 rounded-[16px] bg-[var(--surface)] p-6 shadow-[var(--shadow-md)] md:grid-cols-[auto_1fr] md:gap-10 md:p-8"
       >
         <ProgressRing value={report.correct} max={Math.max(1, report.total)} size={156} stroke={12} tone={report.score >= 80 ? "correct" : "brand"}>
-          <span className="text-[36px] font-extrabold tabular-nums">{report.score}%</span>
+          <span className="text-[36px] font-semibold tabular-nums">{report.score}%</span>
         </ProgressRing>
         <div>
           <h2 className="text-[26px] leading-tight md:text-[32px]">{headline(report.score)}</h2>

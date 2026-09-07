@@ -56,7 +56,7 @@ export function AppShell({
               aria-label="freenote home"
             >
               <Image src="/icon.svg" alt="" width={28} height={28} priority className="rounded-[7px]" />
-              <span className="text-[19px] font-extrabold tracking-[-0.02em]">freenote</span>
+              <span className="text-[19px] font-semibold tracking-[-0.02em]">freenote</span>
             </Link>
 
             <nav aria-label="Primary" className="ml-1 hidden items-center gap-0.5 sm:flex">

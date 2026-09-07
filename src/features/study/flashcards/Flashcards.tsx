@@ -134,7 +134,7 @@ export function Flashcards({ set, terms, settings, onPatchTerm }: FlashcardsProp
   };
 
   const circle =
-    "inline-flex h-12 w-12 items-center justify-center rounded-full border-2 transition-colors " +
+    "inline-flex h-12 w-12 items-center justify-center rounded-full border transition-colors " +
     "disabled:opacity-30 disabled:pointer-events-none";
 
   return (
@@ -399,8 +399,8 @@ function PileCounter({ side, count, label }: { side: "left" | "right"; count: nu
       layoutId={side === "left" ? "pile-learning" : "pile-know"}
       transition={spring.soft}
       className={cn(
-        "absolute top-4 z-10 inline-flex min-w-[52px] items-center justify-center rounded-full border-2 px-3 py-1",
-        "text-[16px] font-extrabold tabular-nums shadow-[var(--shadow-sm)]",
+        "absolute top-4 z-10 inline-flex min-w-[52px] items-center justify-center rounded-full border px-3 py-1",
+        "text-[16px] font-semibold tabular-nums shadow-[var(--shadow-sm)]",
         side === "left" ? "-left-2 md:-left-5" : "-right-2 md:-right-5",
       )}
       style={{ borderColor: border, color, background: bg }}

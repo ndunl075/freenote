@@ -1,6 +1,7 @@
 # freenote — Architecture
 
-Open-source, local-first note-taking + study app. Notability's editor, Quizlet's study UI.
+Open-source, local-first note-taking + study app. One Notability-style interface across
+both halves: the ink editor and the study modes share a single design language.
 No accounts, no server, no telemetry. Everything lives in the browser on your device.
 
 ## Principles
@@ -21,6 +22,17 @@ No accounts, no server, no telemetry. Everything lives in the browser on your de
 | State      | Zustand                   | Small, sync, no provider tree                 |
 | Storage    | Dexie (IndexedDB)         | Blobs (audio/images) + structured records     |
 | Ink        | perfect-freehand + Canvas2D | Pressure-tapered variable-width strokes     |
+
+## Design language
+
+Notability's chrome is essentially clean iOS system UI with paper warmth, so the tokens lean
+on iOS system colours: a calm `#007AFF` accent, warm neutral greys, neutral-charcoal dark
+mode, hairline borders, generous corner radii, and soft shallow elevation. Buttons dim and
+settle rather than bouncing. Type is Inter — the closest open stand-in for SF Pro — at
+interface weights, never display weights.
+
+The study modes use exactly these tokens. Nothing about the study half is styled
+separately; a term card and a note card are the same object with different content.
 
 ## Routing
 
@@ -43,7 +55,7 @@ src/
   features/
     library/      subjects, dividers, note + set grids
     editor/       Notability canvas: toolbars, pages, tools
-    study/        Quizlet modes, each self-contained
+    study/        flashcards, learn, test, match, blast — each self-contained
     settings/     appearance, writing, studying, data
   lib/
     db/           Dexie schema, migrations, repositories
