@@ -200,7 +200,7 @@
   --color-chrome-border: var(--chrome-border);
 
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
+  --font-display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
 
   --shadow-card: var(--shadow-sm);
   --shadow-pop: var(--shadow-md);
@@ -235,16 +235,14 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Headings carry Notability's voice: a heavy rounded display face, set tight.
-   This is the single strongest signal of the interface, so it is applied
-   globally rather than per component. */
+/* Headings are heavy and tightly tracked, with flat terminals. The density
+   comes from weight and negative tracking rather than from a rounded face. */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 :focus-visible {

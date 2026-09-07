@@ -55,7 +55,7 @@ export function AppShell({
               aria-label="FreeNote home"
             >
               <Image src="/icon.svg" alt="" width={28} height={28} priority className="rounded-[7px]" />
-              <span className="font-[family-name:var(--font-display)] text-[20px] font-extrabold tracking-[-0.03em]">
+              <span className="text-[18px] font-extrabold tracking-[-0.03em]">
                 FreeNote
               </span>
             </Link>

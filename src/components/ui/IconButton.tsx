@@ -12,9 +12,9 @@ export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
 }
 
 const sizes = {
-  sm: "h-8 w-8 [&>svg]:h-4 [&>svg]:w-4",
-  md: "h-10 w-10 [&>svg]:h-5 [&>svg]:w-5",
-  lg: "h-12 w-12 [&>svg]:h-6 [&>svg]:w-6",
+  sm: "h-7 w-7 [&>svg]:h-[15px] [&>svg]:w-[15px]",
+  md: "h-9 w-9 [&>svg]:h-[18px] [&>svg]:w-[18px]",
+  lg: "h-10 w-10 [&>svg]:h-5 [&>svg]:w-5",
 };
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(

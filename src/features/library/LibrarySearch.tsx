@@ -37,8 +37,8 @@ export function LibrarySearch() {
         aria-label="Search notes and sets by title"
         autoComplete="off"
         className={cn(
-          "h-10 w-full rounded-[10px] border border-[var(--border)] bg-[var(--surface)] pl-10 pr-10",
-          "text-[15px] text-[var(--text)] placeholder:text-[var(--text-faint)]",
+          "h-9 w-full rounded-[9px] border border-[var(--border)] bg-[var(--surface)] pl-10 pr-10",
+          "text-[13.5px] text-[var(--text)] placeholder:text-[var(--text-faint)]",
           "outline-none transition-colors focus:border-[var(--brand)]",
           "[&::-webkit-search-cancel-button]:hidden",
         )}
