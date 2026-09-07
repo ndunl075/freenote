@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FileText, Minus, Plus, Trash2, ZoomIn } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, FullPageSpinner, IconButton, Tooltip, toast } from "@/components/ui";
-import { PAGE_WIDTH, blobs } from "@/lib/db";
+import { PAGE_WIDTH, blobs, notes as notesRepo } from "@/lib/db";
+import { renderThumbnail } from "@/lib/io/exportNote";
 import { PAPER_COLORS, PAPER_STYLES, defaultInkFor } from "@/lib/ink";
 import { spring } from "@/lib/motion/springs";
 import { newId } from "@/lib/utils/id";
@@ -44,6 +45,22 @@ export function NoteEditor({ noteId, onBack }: { noteId: string; onBack: () => v
     void load(noteId);
     return () => close();
   }, [noteId, load, close]);
+
+  // Keep the library's card art current. Regenerating on a slow interval
+  // rather than per stroke keeps a rasterise off the drawing hot path.
+  const revision = useEditor((s) => s.revision);
+  useEffect(() => {
+    if (!note || pages.length === 0) return;
+    const timer = setTimeout(() => {
+      try {
+        const dataUrl = renderThumbnail(note, pages[0]);
+        if (dataUrl) void notesRepo.saveThumbnail(note.id, dataUrl);
+      } catch {
+        /* canvas unavailable — the library falls back to a paper placeholder */
+      }
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [note, pages, revision]);
 
   // Flush pending writes if the tab goes away mid-stroke.
   useEffect(() => {

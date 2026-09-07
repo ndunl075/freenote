@@ -26,6 +26,7 @@ import {
 } from "@/lib/ink";
 import { spring } from "@/lib/motion/springs";
 import { cn } from "@/lib/utils/cn";
+import { ExportMenu } from "./ExportMenu";
 import { useEditor } from "./store";
 
 const TOOLS: { id: ToolId; label: string; icon: React.ReactNode; shortcut: string }[] = [
@@ -128,6 +129,8 @@ export function Toolbar({ onBack }: { onBack: () => void }) {
             <Redo2 />
           </IconButton>
         </Tooltip>
+
+        <ExportMenu />
       </div>
 
       <AnimatePresence initial={false}>
