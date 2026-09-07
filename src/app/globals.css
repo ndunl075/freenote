@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   freenote design tokens
+
+   The study side is a faithful reconstruction of Quizlet's visual language:
+   the vivid indigo brand, the navy dark theme, the hard-shadow buttons that
+   compress on press, and the mint/coral answer states. The editor side follows
+   Notability's warmer, paper-first chrome.
+   ========================================================================= */
+
+:root {
+  /* Brand ---------------------------------------------------------------- */
+  --brand: #4255ff;
+  --brand-hover: #423ed8;
+  --brand-active: #3a35bd;
+  --brand-soft: #edefff;
+  --brand-ink: #ffffff;
+
+  /* Surfaces ------------------------------------------------------------- */
+  --bg: #ffffff;
+  --bg-subtle: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #f6f7fb;
+  --surface-3: #edeff4;
+  --overlay: rgb(10 9 45 / 0.48);
+
+  /* Text ----------------------------------------------------------------- */
+  --text: #0a092d;
+  --text-muted: #586380;
+  --text-faint: #939bb4;
+  --text-inverse: #ffffff;
+
+  /* Lines ---------------------------------------------------------------- */
+  --border: #d9dde8;
+  --border-soft: #edeff4;
+  --border-strong: #939bb4;
+
+  /* Semantic states ------------------------------------------------------ */
+  --correct: #3ccf91;
+  --correct-bg: #e3f9f0;
+  --correct-text: #0e7c5a;
+  --incorrect: #ff725b;
+  --incorrect-bg: #ffe9e5;
+  --incorrect-text: #c4290e;
+  --star: #ffcd1f;
+  --star-bg: #fff7db;
+  --info: #4255ff;
+
+  /* Progress ring / mastery --------------------------------------------- */
+  --track: #edeff4;
+
+  /* Notability editor chrome -------------------------------------------- */
+  --paper: #fffef9;
+  --paper-line: #cfd8e3;
+  --paper-margin: #f2b8b5;
+  --chrome: #f3f4f8;
+  --chrome-border: #dfe2ea;
+
+  /* Elevation ------------------------------------------------------------ */
+  --shadow-sm: 0 1px 2px rgb(10 9 45 / 0.06);
+  --shadow-md: 0 2px 8px rgb(10 9 45 / 0.08);
+  --shadow-lg: 0 12px 32px rgb(10 9 45 / 0.14);
+  --shadow-xl: 0 24px 64px rgb(10 9 45 / 0.20);
+
+  /* Quizlet's signature "hard" button shadow ----------------------------- */
+  --press: 0 4px 0 0 var(--brand-active);
+  --press-neutral: 0 4px 0 0 var(--border);
+
+  color-scheme: light;
+}
+
+.dark {
+  --brand: #4255ff;
+  --brand-hover: #5a6bff;
+  --brand-active: #7b88ff;
+  --brand-soft: #1e2246;
+  --brand-ink: #ffffff;
+
+  --bg: #0a092d;
+  --bg-subtle: #0a092d;
+  --surface: #2e3856;
+  --surface-2: #1a1f3d;
+  --surface-3: #414a6b;
+  --overlay: rgb(0 0 0 / 0.66);
+
+  --text: #f6f7fb;
+  --text-muted: #a0a9be;
+  --text-faint: #6c7796;
+  --text-inverse: #0a092d;
+
+  --border: #414a6b;
+  --border-soft: #2e3856;
+  --border-strong: #6c7796;
+
+  --correct: #3ccf91;
+  --correct-bg: #123d31;
+  --correct-text: #6ee7b7;
+  --incorrect: #ff725b;
+  --incorrect-bg: #4a1d16;
+  --incorrect-text: #ffab99;
+  --star: #ffcd1f;
+  --star-bg: #3d3212;
+
+  --track: #414a6b;
+
+  --paper: #1b2135;
+  --paper-line: #333c58;
+  --paper-margin: #6b3d3a;
+  --chrome: #1a1f3d;
+  --chrome-border: #2e3856;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 2px 8px rgb(0 0 0 / 0.45);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
+  --shadow-xl: 0 24px 64px rgb(0 0 0 / 0.6);
+
+  --press: 0 4px 0 0 var(--brand-active);
+  --press-neutral: 0 4px 0 0 var(--border);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-inverse: var(--text-inverse);
+
+  --color-line: var(--border);
+  --color-line-soft: var(--border-soft);
+  --color-line-strong: var(--border-strong);
+
+  --color-correct: var(--correct);
+  --color-correct-bg: var(--correct-bg);
+  --color-correct-text: var(--correct-text);
+  --color-incorrect: var(--incorrect);
+  --color-incorrect-bg: var(--incorrect-bg);
+  --color-incorrect-text: var(--incorrect-text);
+  --color-star: var(--star);
+  --color-star-bg: var(--star-bg);
+  --color-track: var(--track);
+
+  --color-paper: var(--paper);
+  --color-paper-line: var(--paper-line);
+  --color-chrome: var(--chrome);
+  --color-chrome-border: var(--chrome-border);
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-pop: var(--shadow-md);
+  --shadow-float: var(--shadow-lg);
+  --shadow-modal: var(--shadow-xl);
+
+  --radius-card: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --ease-quizlet: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base ---------------------------------------------------------------- */
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+/* Quizlet leans on tight, heavy headings. */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Keep the ink canvas from being hijacked by browser gestures. */
+.ink-surface {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Scrollbars: unobtrusive, themed. */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Utilities used across features ---------------------------------------- */
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
