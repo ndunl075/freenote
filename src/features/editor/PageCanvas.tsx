@@ -162,6 +162,14 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     });
   }, [paintLive, paintOverlay]);
 
+  // Size the interaction layers' backing stores on mount and on resize. Doing
+  // this lazily inside the paint functions would leave them unsized until the
+  // first pointer event, which is the event they are meant to receive.
+  useEffect(() => {
+    if (liveRef.current) prepareCanvas(liveRef.current, width, height);
+    if (overlayRef.current) prepareCanvas(overlayRef.current, width, height);
+  }, [width, height]);
+
   useEffect(() => {
     return () => {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
@@ -286,11 +294,25 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       className="relative shrink-0 overflow-hidden rounded-[2px] shadow-[var(--shadow-md)]"
       style={{ width, height }}
     >
-      <canvas ref={committedRef} className="absolute inset-0" aria-hidden />
-      <canvas ref={liveRef} className="absolute inset-0" aria-hidden />
+      {/* A canvas is a replaced element: absolutely positioned with inset-0
+          and width:auto it resolves to its intrinsic 300x150 instead of
+          stretching. Every layer therefore gets an explicit CSS size. */}
+      <canvas
+        ref={committedRef}
+        className="absolute left-0 top-0"
+        style={{ width, height }}
+        aria-hidden
+      />
+      <canvas
+        ref={liveRef}
+        className="absolute left-0 top-0"
+        style={{ width, height }}
+        aria-hidden
+      />
       <canvas
         ref={overlayRef}
-        className="ink-surface absolute inset-0"
+        className="ink-surface absolute left-0 top-0"
+        style={{ width, height }}
         role="application"
         aria-label={`Page ${page.index + 1}`}
         onPointerDown={onPointerDown}
