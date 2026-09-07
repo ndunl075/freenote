@@ -60,41 +60,41 @@ export function HomeHero({
       variants={stagger(0.05)}
       initial="hidden"
       animate="show"
-      className="mx-auto max-w-[760px] pb-10 pt-4 text-center"
+      className="mx-auto max-w-[680px] pb-8 pt-2 text-center"
       aria-label="Get started"
     >
       <motion.div variants={riseIn} className="flex justify-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-[18px] bg-[var(--brand-soft)] text-[var(--brand)]">
-          <NotebookPen className="h-8 w-8" aria-hidden />
+        <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[var(--brand-soft)] text-[var(--brand)]">
+          <NotebookPen className="h-6 w-6" aria-hidden />
         </span>
       </motion.div>
 
-      <motion.h1 variants={riseIn} className="mt-4 text-[34px] leading-[1.1]">
+      <motion.h1 variants={riseIn} className="mt-3 text-[26px] leading-[1.15]">
         Let&rsquo;s get started
       </motion.h1>
 
-      <motion.p variants={riseIn} className="mx-auto mt-2 max-w-[520px] text-[15px] text-[var(--text-muted)]">
+      <motion.p variants={riseIn} className="mx-auto mt-1.5 max-w-[460px] text-[13px] leading-relaxed text-[var(--text-muted)]">
         &ldquo;{quote.text}&rdquo; &mdash; {quote.who}
       </motion.p>
 
       <motion.div
         variants={riseIn}
-        className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3"
+        className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-3"
       >
         {actions.map((a) => (
           <button
             key={a.sub}
             onClick={a.run}
             className={cn(
-              "group flex flex-col items-center gap-2 rounded-[16px] border px-4 py-6",
+              "group flex flex-col items-center gap-1.5 rounded-[13px] border px-3 py-4",
               "transition-transform duration-150 hover:-translate-y-[2px] active:translate-y-0",
               TINTS[a.tint],
             )}
           >
-            <span className="[&>svg]:h-6 [&>svg]:w-6" aria-hidden>
+            <span className="[&>svg]:h-[18px] [&>svg]:w-[18px]" aria-hidden>
               {a.icon}
             </span>
-            <span className="font-[family-name:var(--font-display)] text-[17px] font-extrabold leading-tight">
+            <span className="text-[13.5px] font-extrabold leading-tight tracking-[-0.02em]">
               {a.label}
               <br />
               {a.sub}
@@ -106,7 +106,7 @@ export function HomeHero({
       <motion.button
         variants={riseIn}
         onClick={onImport}
-        className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--text-muted)] transition-colors hover:text-[var(--brand)]"
+        className="mt-3.5 inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[var(--text-muted)] transition-colors hover:text-[var(--brand)]"
       >
         <Download className="h-4 w-4" aria-hidden />
         Restore from a backup

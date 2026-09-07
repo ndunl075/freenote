@@ -21,7 +21,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
  * feedback is a tint change, the way iOS controls behave.
  */
 const base =
-  "relative inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold " +
+  "relative inline-flex items-center justify-center gap-1.5 rounded-[9px] font-semibold " +
   "select-none whitespace-nowrap transition-[transform,background-color,border-color,opacity] " +
   "duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] " +
   "disabled:pointer-events-none disabled:opacity-40 " +
@@ -38,9 +38,9 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-8 px-3 text-[13px]",
-  md: "h-10 px-4 text-[15px]",
-  lg: "h-12 px-6 text-[16px]",
+  sm: "h-7 px-2.5 text-[12px]",
+  md: "h-9 px-3.5 text-[13.5px]",
+  lg: "h-10 px-5 text-[15px]",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(

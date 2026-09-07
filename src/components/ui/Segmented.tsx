@@ -66,7 +66,7 @@ export function Segmented<T extends string>({
         }
       }}
       className={cn(
-        "relative inline-flex items-center gap-1 rounded-full bg-[var(--surface-2)] p-1",
+        "relative inline-flex items-center gap-0.5 rounded-full bg-[var(--surface-2)] p-[3px]",
         className,
       )}
     >
@@ -81,8 +81,8 @@ export function Segmented<T extends string>({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(o.value)}
             className={cn(
-              "relative z-10 inline-flex items-center gap-2 rounded-full px-4 py-2",
-              "text-[14px] font-bold transition-colors duration-150",
+              "relative z-10 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5",
+              "text-[13px] font-semibold transition-colors duration-150",
               selected ? "text-[var(--text)]" : "text-[var(--text-muted)] hover:text-[var(--text)]",
             )}
           >
