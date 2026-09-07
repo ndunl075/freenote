@@ -79,14 +79,14 @@ export interface StrokeOptions {
   taperEnd: number;
 }
 
-export function strokeOptions(tool: InkTool, size: number, hasPressure: boolean): StrokeOptions {
+export function strokeOptions(tool: InkTool, size: number): StrokeOptions {
   switch (tool) {
     case "highlighter":
       return {
         size,
         thinning: 0,
-        smoothing: 0.5,
-        streamline: 0.45,
+        smoothing: 0.6,
+        streamline: 0.32,
         simulatePressure: false,
         capStart: false,
         capEnd: false,
@@ -97,9 +97,9 @@ export function strokeOptions(tool: InkTool, size: number, hasPressure: boolean)
       return {
         size,
         thinning: 0.2,
-        smoothing: 0.55,
-        streamline: 0.4,
-        simulatePressure: !hasPressure,
+        smoothing: 0.6,
+        streamline: 0.3,
+        simulatePressure: false,
         capStart: true,
         capEnd: true,
         taperStart: 0,
@@ -109,14 +109,19 @@ export function strokeOptions(tool: InkTool, size: number, hasPressure: boolean)
     default:
       return {
         size,
-        thinning: 0.62,
-        smoothing: 0.52,
-        streamline: 0.42,
-        simulatePressure: !hasPressure,
+        thinning: 0.58,
+        // Higher smoothing rounds the corners hand tremor puts in; lower
+        // streamline keeps the line under the nib instead of lagging behind
+        // it. Streamline is the setting that makes ink feel sluggish.
+        smoothing: 0.62,
+        streamline: 0.28,
+        // Never simulate: the nib dynamics already supply a real per-point
+        // value from pressure, speed and tilt.
+        simulatePressure: false,
         capStart: true,
         capEnd: true,
-        taperStart: size * 1.2,
-        taperEnd: size * 1.6,
+        taperStart: size * 0.9,
+        taperEnd: size * 1.4,
       };
   }
 }

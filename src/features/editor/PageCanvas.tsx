@@ -15,7 +15,9 @@ import {
   selectWithLasso,
   strokesHitByEraser,
   type InkTool,
+  type ToolId,
 } from "@/lib/ink";
+import { isGesturing, touchDown, touchUp } from "./gestures";
 import { useEditor } from "./store";
 import { useRecording } from "./recordingStore";
 
@@ -86,6 +88,10 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   const activePointerRef = useRef<number | null>(null);
   /** Strokes erased during the current swipe, so we only commit once on lift. */
   const pendingEraseRef = useRef<Set<string>>(new Set());
+  /** Points the browser predicts the pointer will reach; drawn, never stored. */
+  const predictedRef = useRef<number[]>([]);
+  /** Tool to restore when a stylus eraser signal ends. */
+  const springBackToolRef = useRef<ToolId | null>(null);
   /**
    * When the pointer last actually moved — a dwell before lift means "snap".
    * Read from the event's own timeStamp rather than a clock, so it records
@@ -148,7 +154,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     ctx.scale(scaleFactor, scaleFactor);
     drawLiveOutline(
       ctx,
-      builder.outline(),
+      builder.outline(predictedRef.current),
       builder.color,
       builder.opacity,
       builder.tool === "highlighter",
@@ -233,10 +239,31 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const state = useEditor.getState();
 
-    // Palm rejection: with a stylus in use, touch scrolls instead of drawing.
-    if (state.stylusOnly && e.pointerType === "touch") return;
-    // Never draw with a right-click or a stylus eraser barrel button.
+    if (e.pointerType === "touch") {
+      const fingers = touchDown(e.pointerId);
+      // Two fingers belong to the gesture layer. Abandon anything the first
+      // finger had started so a pinch never leaves a stray mark.
+      if (fingers >= 2) {
+        abandonStroke();
+        return;
+      }
+      // Palm rejection, and the hand tool, both hand touch to the scroller.
+      if (state.stylusOnly || state.tool === "hand") return;
+    }
+
+    // Right-click never draws.
     if (e.button !== 0 && e.pointerType === "mouse") return;
+
+    // A stylus reporting its eraser end, or holding its barrel button, erases
+    // for as long as it is held and springs back to the previous tool on lift.
+    // Apple Pencil's squeeze is not exposed to web browsers at all; this is the
+    // closest thing the platform actually gives us.
+    const eraserSignal =
+      e.pointerType === "pen" && (e.button === 5 || (e.buttons & 32) !== 0);
+    if (eraserSignal && state.tool !== "eraser") {
+      springBackToolRef.current = state.tool;
+      state.setTool("eraser");
+    }
     if (
       state.tool === "hand" ||
       state.tool === "text" ||
@@ -280,6 +307,12 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
 
     // Coalesced events recover the samples the browser batched between frames.
     // On a 240Hz stylus this is the difference between smooth ink and facets.
+    // A second finger mid-stroke means the user started a pinch.
+    if (e.pointerType === "touch" && isGesturing()) {
+      abandonStroke();
+      return;
+    }
+
     const events =
       typeof e.nativeEvent.getCoalescedEvents === "function"
         ? e.nativeEvent.getCoalescedEvents()
@@ -293,12 +326,26 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       else if (state.tool === "lasso") lassoPathRef.current.push(x, y);
       else {
         const before = builderRef.current?.length ?? 0;
-        builderRef.current?.push(x, y, ev.pressure);
+        builderRef.current?.push(x, y, ev.pressure, ev.tiltX ?? 0, ev.tiltY ?? 0, ev.timeStamp);
         // push() drops samples that land on the previous point, so a growing
         // length is exactly "the pen actually moved".
         if ((builderRef.current?.length ?? 0) > before) {
           lastMotionRef.current = ev.timeStamp;
         }
+      }
+    }
+
+    // Points the browser expects the pointer to reach before the next frame.
+    // Drawing them makes ink keep up with the nib rather than trail it.
+    predictedRef.current = [];
+    if (state.tool !== "eraser" && state.tool !== "lasso") {
+      const predict =
+        typeof e.nativeEvent.getPredictedEvents === "function"
+          ? e.nativeEvent.getPredictedEvents()
+          : [];
+      for (const ev of predict) {
+        const [px, py] = toPage(ev.clientX, ev.clientY);
+        predictedRef.current.push(px, py, 0.5);
       }
     }
 
@@ -317,7 +364,26 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     }
   };
 
+  /** Throw away the in-progress stroke without committing it. */
+  const abandonStroke = () => {
+    activePointerRef.current = null;
+    builderRef.current = null;
+    predictedRef.current = [];
+    eraserPathRef.current = [];
+    lassoPathRef.current = [];
+    requestPaint();
+  };
+
+  const releaseSpringBackTool = () => {
+    if (springBackToolRef.current) {
+      useEditor.getState().setTool(springBackToolRef.current);
+      springBackToolRef.current = null;
+    }
+  };
+
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === "touch") touchUp(e.pointerId);
+    releaseSpringBackTool();
     if (activePointerRef.current !== e.pointerId) return;
     activePointerRef.current = null;
     try {
@@ -365,12 +431,10 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   };
 
   const onPointerCancel = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === "touch") touchUp(e.pointerId);
+    releaseSpringBackTool();
     if (activePointerRef.current !== e.pointerId) return;
-    activePointerRef.current = null;
-    builderRef.current = null;
-    eraserPathRef.current = [];
-    lassoPathRef.current = [];
-    requestPaint();
+    abandonStroke();
   };
 
   return (

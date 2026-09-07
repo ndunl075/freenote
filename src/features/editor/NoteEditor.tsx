@@ -10,6 +10,7 @@ import { PAPER_COLORS, PAPER_STYLES, STICKY_COLORS, defaultInkFor } from "@/lib/
 import { spring } from "@/lib/motion/springs";
 import { newId } from "@/lib/utils/id";
 import { cn } from "@/lib/utils/cn";
+import { clearTouches } from "./gestures";
 import { PageNavigator } from "./PageNavigator";
 import { PageSlot } from "./PageSlot";
 import { RecordingBar } from "./RecordingBar";
@@ -53,6 +54,102 @@ export function NoteEditor({
     void load(noteId);
     return () => close();
   }, [noteId, load, close]);
+
+  /* --- Pinch to zoom, and one finger to pan with the hand tool --------------
+     The canvas takes single-finger touches for drawing, so the scroller only
+     claims a touch when it is the second one (a pinch) or when the hand tool
+     is active. Zoom is anchored on the midpoint between the fingers so the
+     page grows around what you are looking at rather than the top-left. */
+  const pinchRef = useRef<{
+    pointers: Map<number, { x: number; y: number }>;
+    startDistance: number;
+    startZoom: number;
+    startScroll: { left: number; top: number };
+    startMid: { x: number; y: number };
+  } | null>(null);
+
+  const onScrollerPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType !== "touch") return;
+      const el = scrollRef.current;
+      if (!el) return;
+
+      const g = pinchRef.current ?? {
+        pointers: new Map<number, { x: number; y: number }>(),
+        startDistance: 0,
+        startZoom: zoom,
+        startScroll: { left: el.scrollLeft, top: el.scrollTop },
+        startMid: { x: 0, y: 0 },
+      };
+      g.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (g.pointers.size === 2) {
+        const [a, b] = [...g.pointers.values()];
+        g.startDistance = Math.hypot(a.x - b.x, a.y - b.y);
+        g.startZoom = zoom;
+        g.startScroll = { left: el.scrollLeft, top: el.scrollTop };
+        g.startMid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      }
+      pinchRef.current = g;
+    },
+    [zoom],
+  );
+
+  const onScrollerPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType !== "touch") return;
+      const g = pinchRef.current;
+      const el = scrollRef.current;
+      if (!g || !el || !g.pointers.has(e.pointerId)) return;
+
+      const previous = g.pointers.get(e.pointerId)!;
+      g.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      // One finger with the hand tool pans the page directly.
+      if (g.pointers.size === 1) {
+        if (tool !== "hand") return;
+        el.scrollLeft -= e.clientX - previous.x;
+        el.scrollTop -= e.clientY - previous.y;
+        return;
+      }
+
+      if (g.pointers.size !== 2 || g.startDistance === 0) return;
+      const [a, b] = [...g.pointers.values()];
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      const next = Math.min(4, Math.max(0.25, (g.startZoom * distance) / g.startDistance));
+
+      // Keep the point between the fingers under the fingers as scale changes.
+      const growth = next / g.startZoom;
+      el.scrollLeft = (g.startScroll.left + g.startMid.x) * growth - g.startMid.x;
+      el.scrollTop = (g.startScroll.top + g.startMid.y) * growth - g.startMid.y;
+      setZoom(next);
+    },
+    [tool, setZoom],
+  );
+
+  const onScrollerPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "touch") return;
+    const g = pinchRef.current;
+    if (!g) return;
+    g.pointers.delete(e.pointerId);
+    if (g.pointers.size === 0) {
+      pinchRef.current = null;
+      clearTouches();
+    }
+  }, []);
+
+  // Ctrl/⌘ + wheel is the trackpad pinch gesture on desktop.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      setZoom(useEditor.getState().zoom * (1 - e.deltaY / 500));
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [setZoom]);
 
   // A letter page is 816px wide, so on a phone it would open scrolled off the
   // right edge. Fit it to the viewport once on mount, then leave zoom alone —
@@ -276,7 +373,14 @@ export function NoteEditor({
         }}
       />
 
-      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-8">
+      <div
+        ref={scrollRef}
+        onPointerDown={onScrollerPointerDown}
+        onPointerMove={onScrollerPointerMove}
+        onPointerUp={onScrollerPointerUp}
+        onPointerCancel={onScrollerPointerUp}
+        className="flex-1 overflow-auto px-4 py-8"
+      >
         <div className="mx-auto flex w-fit flex-col items-center gap-6">
           {pages.map((page, i) => (
             <div key={page.id} id={`page-${page.id}`} className="group/page relative">
