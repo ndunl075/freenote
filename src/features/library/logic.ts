@@ -13,7 +13,8 @@ import type { ID, Note, StudySet, Subject } from "@/lib/db";
  * exporter round-trips them, so this becomes a no-op the day the schema grows
  * a real `starred: boolean`.
  */
-export type LibrarySet = StudySet & { starred?: boolean };
+/** Sets carry `starred` on the record itself; kept as an alias for clarity. */
+export type LibrarySet = StudySet;
 
 export type Section =
   | { kind: "all" }

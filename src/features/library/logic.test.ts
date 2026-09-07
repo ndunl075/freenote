@@ -57,6 +57,7 @@ function set(partial: Partial<LibrarySet> & { id: string }): LibrarySet {
     sourceNoteId: null,
     termLanguage: "en",
     definitionLanguage: "en",
+    starred: false,
     createdAt: T0,
     updatedAt: T0,
     ...partial,

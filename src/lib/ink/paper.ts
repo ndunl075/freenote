@@ -26,6 +26,9 @@ const LINE_HEIGHTS: Partial<Record<PaperStyle, number>> = {
 const GRID_SIZE = 24;
 const DOT_SPACING = 24;
 
+/** Left margin rule, three quarters of an inch in at 96dpi. */
+const MARGIN_X = 72;
+
 /**
  * Paints the page background. Drawn straight to the committed canvas rather
  * than layered as CSS so that PDF/PNG export gets the paper for free.
@@ -54,6 +57,16 @@ export function drawPaper(
     case "lined-wide": {
       const gap = LINE_HEIGHTS[style]!;
       horizontalRules(ctx, width, height, gap, gap * 2);
+
+      // The red margin rule down the left. Notability's ruled paper has one,
+      // and so does the library's paper preview — without it here the two
+      // disagree about what the same page looks like.
+      ctx.strokeStyle = palette.margin;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(roundHalf(MARGIN_X), 0);
+      ctx.lineTo(roundHalf(MARGIN_X), height);
+      ctx.stroke();
       break;
     }
 

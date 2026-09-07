@@ -58,10 +58,7 @@ export async function toggleStar(item: LibraryItem): Promise<void> {
   if (item.kind === "note") {
     await notes.toggleStar(item.id);
   } else {
-    // `starred` is not part of StudySet yet — see LibrarySet in logic.ts.
-    // Dexie persists the extra field and the backup exporter round-trips it.
-    const patch = { starred: !item.starred } as unknown as Partial<StudySet>;
-    await sets.update(item.id, patch);
+    await sets.toggleStar(item.id);
   }
   await reload();
 }

@@ -131,7 +131,7 @@ export const useEditor = create<EditorState>((set, get) => {
 
     tool: "pen",
     color: "#1a1a1a",
-    size: 2,
+    size: 3,
     eraserSize: 16,
     highlighterColor: "#ffe14d",
     highlighterSize: 18,

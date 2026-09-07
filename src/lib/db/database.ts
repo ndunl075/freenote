@@ -42,7 +42,7 @@ export class FreenoteDB extends Dexie {
       pages: "id, noteId, [noteId+index]",
       recordings: "id, noteId",
       blobs: "id",
-      sets: "id, subjectId, updatedAt, sourceNoteId, title",
+      sets: "id, subjectId, updatedAt, sourceNoteId, title, starred",
       terms: "id, setId, [setId+order], starred",
       progress: "termId, setId, dueAt, box",
       matchRecords: "id, setId, timeMs",
