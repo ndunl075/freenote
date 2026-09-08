@@ -17,7 +17,7 @@ import {
   type InkTool,
   type ToolId,
 } from "@/lib/ink";
-import { isGesturing, touchDown, touchUp } from "./gestures";
+import { isGesturing, notePointerType, shouldDraw, touchDown, touchUp } from "./gestures";
 import { useEditor } from "./store";
 import { useRecording } from "./recordingStore";
 
@@ -88,8 +88,6 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   const activePointerRef = useRef<number | null>(null);
   /** Strokes erased during the current swipe, so we only commit once on lift. */
   const pendingEraseRef = useRef<Set<string>>(new Set());
-  /** Points the browser predicts the pointer will reach; drawn, never stored. */
-  const predictedRef = useRef<number[]>([]);
   /** Tool to restore when a stylus eraser signal ends. */
   const springBackToolRef = useRef<ToolId | null>(null);
   /**
@@ -154,7 +152,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     ctx.scale(scaleFactor, scaleFactor);
     drawLiveOutline(
       ctx,
-      builder.outline(predictedRef.current),
+      builder.outline(),
       builder.color,
       builder.opacity,
       builder.tool === "highlighter",
@@ -238,6 +236,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const state = useEditor.getState();
+    notePointerType(e.pointerType);
 
     if (e.pointerType === "touch") {
       const fingers = touchDown(e.pointerId);
@@ -247,8 +246,19 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
         abandonStroke();
         return;
       }
-      // Palm rejection, and the hand tool, both hand touch to the scroller.
-      if (state.stylusOnly || state.tool === "hand") return;
+      if (state.tool === "hand") return;
+      // Palm rejection. Once a stylus has been used, a touch is a resting
+      // hand; before that, an unusually broad contact patch gives it away.
+      if (
+        !shouldDraw({
+          pointerType: e.pointerType,
+          width: e.width,
+          height: e.height,
+          forcePenOnly: state.stylusOnly,
+        })
+      ) {
+        return;
+      }
     }
 
     // Right-click never draws.
@@ -293,6 +303,7 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
         tool,
         isHl ? state.highlighterColor : state.color,
         isHl ? state.highlighterSize : state.size,
+        e.pointerType,
       );
       lastMotionRef.current = e.nativeEvent.timeStamp;
       // The stylus's own eraser end maps to the eraser regardless of tool.
@@ -335,20 +346,6 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
       }
     }
 
-    // Points the browser expects the pointer to reach before the next frame.
-    // Drawing them makes ink keep up with the nib rather than trail it.
-    predictedRef.current = [];
-    if (state.tool !== "eraser" && state.tool !== "lasso") {
-      const predict =
-        typeof e.nativeEvent.getPredictedEvents === "function"
-          ? e.nativeEvent.getPredictedEvents()
-          : [];
-      for (const ev of predict) {
-        const [px, py] = toPage(ev.clientX, ev.clientY);
-        predictedRef.current.push(px, py, 0.5);
-      }
-    }
-
     if (state.tool === "eraser") applyErase();
     requestPaint();
   };
@@ -368,7 +365,6 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
   const abandonStroke = () => {
     activePointerRef.current = null;
     builderRef.current = null;
-    predictedRef.current = [];
     eraserPathRef.current = [];
     lassoPathRef.current = [];
     requestPaint();
