@@ -37,6 +37,7 @@ export function NoteEditor({
   const zoom = useEditor((s) => s.zoom);
   const setZoom = useEditor((s) => s.setZoom);
   const tool = useEditor((s) => s.tool);
+  const fingerDrawing = useEditor((s) => s.fingerDrawing);
   const undo = useEditor((s) => s.undo);
   const redo = useEditor((s) => s.redo);
   const addPage = useEditor((s) => s.addPage);
@@ -105,9 +106,11 @@ export function NoteEditor({
       const previous = g.pointers.get(e.pointerId)!;
       g.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-      // One finger with the hand tool pans the page directly.
+      // One finger pans whenever it is not being used to draw — with the hand
+      // tool, or because finger drawing is off and the pen owns the ink. This
+      // is what makes a tablet feel right: finger scrolls, stylus writes.
       if (g.pointers.size === 1) {
-        if (tool !== "hand") return;
+        if (tool !== "hand" && fingerDrawing) return;
         el.scrollLeft -= e.clientX - previous.x;
         el.scrollTop -= e.clientY - previous.y;
         return;
@@ -124,7 +127,7 @@ export function NoteEditor({
       el.scrollTop = (g.startScroll.top + g.startMid.y) * growth - g.startMid.y;
       setZoom(next);
     },
-    [tool, setZoom],
+    [tool, fingerDrawing, setZoom],
   );
 
   const onScrollerPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {

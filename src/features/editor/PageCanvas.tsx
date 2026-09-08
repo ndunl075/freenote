@@ -247,14 +247,13 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
         return;
       }
       if (state.tool === "hand") return;
-      // Palm rejection. Once a stylus has been used, a touch is a resting
-      // hand; before that, an unusually broad contact patch gives it away.
+      // A finger scrolls; only a stylus draws, unless finger drawing is on.
       if (
         !shouldDraw({
           pointerType: e.pointerType,
           width: e.width,
           height: e.height,
-          forcePenOnly: state.stylusOnly,
+          fingerDrawing: state.fingerDrawing,
         })
       ) {
         return;
@@ -285,7 +284,13 @@ export function PageCanvas({ page, paper, paperColor, width }: PageCanvasProps) 
     if (activePointerRef.current !== null) return;
 
     activePointerRef.current = e.pointerId;
-    e.currentTarget.setPointerCapture(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // Capture can be refused — the pointer may already be captured, or gone.
+      // Losing capture costs us events outside the canvas, but silently
+      // failing to start the stroke at all would be far worse.
+    }
     e.preventDefault();
 
     const [x, y] = toPage(e.clientX, e.clientY);

@@ -46,22 +46,26 @@ export function resetPenSeen(): void {
 /**
  * Should this pointer be allowed to lay down ink?
  *
- * `forcePenOnly` is the user's explicit setting; the rest is inference.
+ * A stylus and a mouse always draw. A finger draws only if the user has asked
+ * for it, and even then a contact too broad to be a fingertip is refused.
+ *
+ * This is a decision rather than an inference on purpose. The previous version
+ * tried to spot a palm from its contact size and from whether a stylus had
+ * been seen, and both fail on the device that matters: Safari reports no
+ * contact geometry for touch, and a palm lands on the glass *before* the pen
+ * tip does, so nothing has armed yet at the moment it needs to.
  */
 export function shouldDraw(input: {
   pointerType: string;
   width?: number;
   height?: number;
-  forcePenOnly: boolean;
+  fingerDrawing: boolean;
 }): boolean {
-  if (input.pointerType === "pen" || input.pointerType === "mouse") return true;
   if (input.pointerType !== "touch") return true;
+  if (!input.fingerDrawing) return false;
 
-  if (input.forcePenOnly) return false;
-  // A stylus has been used, so this touch is a resting hand.
-  if (penSeen) return false;
-
-  // No pen yet: judge the contact on its size.
+  // Finger drawing is on, so a palm is still worth catching where the browser
+  // gives us the geometry to catch it with.
   const w = input.width ?? 0;
   const h = input.height ?? 0;
   return Math.max(w, h) <= MAX_FINGER_CONTACT;
