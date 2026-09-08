@@ -85,8 +85,8 @@ export function strokeOptions(tool: InkTool, size: number): StrokeOptions {
       return {
         size,
         thinning: 0,
-        smoothing: 0.6,
-        streamline: 0.32,
+        smoothing: 0.58,
+        streamline: 0.46,
         simulatePressure: false,
         capStart: false,
         capEnd: false,
@@ -97,8 +97,8 @@ export function strokeOptions(tool: InkTool, size: number): StrokeOptions {
       return {
         size,
         thinning: 0.2,
-        smoothing: 0.6,
-        streamline: 0.3,
+        smoothing: 0.58,
+        streamline: 0.44,
         simulatePressure: false,
         capStart: true,
         capEnd: true,
@@ -110,11 +110,11 @@ export function strokeOptions(tool: InkTool, size: number): StrokeOptions {
       return {
         size,
         thinning: 0.58,
-        // Higher smoothing rounds the corners hand tremor puts in; lower
-        // streamline keeps the line under the nib instead of lagging behind
-        // it. Streamline is the setting that makes ink feel sluggish.
-        smoothing: 0.62,
-        streamline: 0.28,
+        // Jitter is removed at the input by the One Euro filter, so streamline
+        // no longer has to choose between a wobbly line and a laggy one. It
+        // sits mid-range purely to round the corners of the outline.
+        smoothing: 0.6,
+        streamline: 0.42,
         // Never simulate: the nib dynamics already supply a real per-point
         // value from pressure, speed and tilt.
         simulatePressure: false,

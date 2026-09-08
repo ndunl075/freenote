@@ -2,6 +2,7 @@ import { getStroke } from "perfect-freehand";
 import { newId } from "@/lib/utils/id";
 import type { Stroke } from "@/lib/db/types";
 import { nibPressure, tiltFromEvent } from "./dynamics";
+import { filterFor, type PointFilter } from "./filter";
 import { POINT_STRIDE, bboxOf, simplify } from "./geometry";
 import { opacityFor, strokeOptions, type InkTool } from "./tools";
 
@@ -25,13 +26,22 @@ export class StrokeBuilder {
   private lastY = 0;
   private lastAt = 0;
   private started = false;
+  /** Adaptive smoothing, tuned to whatever is touching the screen. */
+  private readonly filter: PointFilter;
 
-  constructor(tool: InkTool, color: string, size: number, startedAt = performance.now()) {
+  constructor(
+    tool: InkTool,
+    color: string,
+    size: number,
+    pointerType = "pen",
+    startedAt = performance.now(),
+  ) {
     this.tool = tool;
     this.color = color;
     this.size = size;
     this.opacity = opacityFor(tool);
     this.startedAt = startedAt;
+    this.filter = filterFor(pointerType);
   }
 
   get length(): number {
@@ -50,12 +60,17 @@ export class StrokeBuilder {
    * per sample, means the expensive part happens at input rate rather than on
    * every repaint, and the stored stroke already carries its own dynamics.
    */
-  push(x: number, y: number, pressure: number, tiltX = 0, tiltY = 0, at?: number): void {
+  push(rawX: number, rawY: number, pressure: number, tiltX = 0, tiltY = 0, at?: number): void {
     // Chromium reports 0.5 for mice and 0 for some pens before contact, so a
     // constant 0.5 means "this device has no pressure to give".
     if (pressure > 0 && pressure !== 0.5) this.sawPressure = true;
 
     const now = at ?? this.lastAt + 8;
+
+    // Filter before anything else looks at the coordinates, so speed, bbox and
+    // the stored geometry all agree on where the pen actually was.
+    const dt = this.started ? Math.max(0.001, (now - this.lastAt) / 1000) : 1 / 120;
+    const [x, y] = this.filter.filter(rawX, rawY, dt);
 
     // Drop samples that land on the previous point — they add storage and
     // produce zero-length segments that upset the outline generator.
@@ -68,8 +83,7 @@ export class StrokeBuilder {
 
     let speed = 0;
     if (this.started) {
-      const dt = Math.max(1, now - this.lastAt);
-      speed = Math.hypot(x - this.lastX, y - this.lastY) / dt;
+      speed = Math.hypot(x - this.lastX, y - this.lastY) / Math.max(1, now - this.lastAt);
     }
 
     this.points.push(
@@ -92,15 +106,14 @@ export class StrokeBuilder {
   /**
    * Outline for the in-progress stroke, recomputed each frame.
    *
-   * `predicted` carries points the browser expects the pointer to reach before
-   * the next frame lands. Drawing them makes the ink appear to keep up with
-   * the nib instead of trailing it — the single largest contributor to writing
-   * feeling responsive. They are never committed, so a wrong guess costs
-   * nothing beyond one frame.
+   * This deliberately draws only points that actually happened. An earlier
+   * version appended the browser's predicted positions to cut perceived
+   * latency, but a wrong prediction visibly bent the live stroke and then
+   * snapped it straight on lift. Responsiveness is worth having; it is not
+   * worth drawing a line the user did not make.
    */
-  outline(predicted?: number[]): number[][] {
-    const points =
-      predicted && predicted.length ? this.points.concat(predicted) : this.points;
+  outline(): number[][] {
+    const points = this.points;
     return getStroke(toTriples(points), {
       ...strokeOptions(this.tool, this.size),
       last: false,
