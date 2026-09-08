@@ -102,11 +102,18 @@ test("flashcards advance through the deck", async ({ page }) => {
   await page.goto(`/study/?set=${SET}&mode=flashcards`);
   await expect(page.getByText("1 / 8").first()).toBeVisible({ timeout: 15_000 });
 
+  // Wait for a real control before sending keys. Text appearing only proves the
+  // markup rendered; the window-level key handler is attached in an effect, and
+  // under parallel load a keypress can land in the gap between the two.
+  await expect(page.getByRole("button", { name: /next card/i })).toBeVisible({
+    timeout: 15_000,
+  });
+
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByText("2 / 8").first()).toBeVisible();
+  await expect(page.getByText("2 / 8").first()).toBeVisible({ timeout: 10_000 });
 
   await page.keyboard.press("ArrowLeft");
-  await expect(page.getByText("1 / 8").first()).toBeVisible();
+  await expect(page.getByText("1 / 8").first()).toBeVisible({ timeout: 10_000 });
 });
 
 test("learn marks a wrong answer and reveals the right one", async ({ page }) => {

@@ -31,14 +31,14 @@ export function WritingSection({
       description="Defaults for new notes. Each note can still change its own paper."
     >
       <SettingRow
-        id="stylus-only"
-        title="Palm rejection"
-        description="Ignore finger touches while a stylus is in range, so resting your hand on the screen never draws."
+        id="finger-drawing"
+        title="Draw with your finger"
+        description="Off by default so a resting palm never leaves a mark. With this off, a finger scrolls the page and only a stylus draws. Turn it on if you have no stylus."
         control={
           <Switch
-            checked={settings.stylusOnly}
-            onChange={(v) => void update({ stylusOnly: v })}
-            label="Palm rejection"
+            checked={settings.fingerDrawing}
+            onChange={(v) => void update({ fingerDrawing: v })}
+            label="Draw with your finger"
           />
         }
       />

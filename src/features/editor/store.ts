@@ -41,7 +41,7 @@ interface EditorState {
   zoom: number;
   selection: Selection;
   selectionPageId: ID | null;
-  stylusOnly: boolean;
+  fingerDrawing: boolean;
 
   /** Bumped whenever a page mutates, so canvases know to repaint. */
   revision: number;
@@ -57,7 +57,7 @@ interface EditorState {
   setSize: (size: number) => void;
   setEraserSize: (size: number) => void;
   setZoom: (zoom: number) => void;
-  setStylusOnly: (v: boolean) => void;
+  setFingerDrawing: (v: boolean) => void;
 
   commitStroke: (pageId: ID, stroke: Stroke) => void;
   eraseStrokes: (pageId: ID, strokeIds: Set<string>) => void;
@@ -139,7 +139,7 @@ export const useEditor = create<EditorState>((set, get) => {
     zoom: 1,
     selection: EMPTY_SELECTION,
     selectionPageId: null,
-    stylusOnly: false,
+    fingerDrawing: false,
 
     revision: 0,
     canUndo: false,
@@ -163,7 +163,7 @@ export const useEditor = create<EditorState>((set, get) => {
         note: note ?? null,
         pages,
         loading: false,
-        stylusOnly: prefs.stylusOnly,
+        fingerDrawing: prefs.fingerDrawing,
         selection: EMPTY_SELECTION,
         selectionPageId: null,
         canUndo: false,
@@ -195,9 +195,9 @@ export const useEditor = create<EditorState>((set, get) => {
       set(get().tool === "highlighter" ? { highlighterSize: size } : { size }),
     setEraserSize: (eraserSize) => set({ eraserSize }),
     setZoom: (zoom) => set({ zoom: Math.min(4, Math.max(0.25, zoom)) }),
-    setStylusOnly: (stylusOnly) => {
-      set({ stylusOnly });
-      void settingsRepo.update({ stylusOnly });
+    setFingerDrawing: (fingerDrawing) => {
+      set({ fingerDrawing });
+      void settingsRepo.update({ fingerDrawing });
     },
 
     commitStroke: (pageId, stroke) => run(pageId, { kind: "add-strokes", strokes: [stroke] }),

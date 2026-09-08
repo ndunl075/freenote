@@ -17,29 +17,37 @@ beforeEach(() => {
 });
 
 const touch = (over: Partial<Parameters<typeof shouldDraw>[0]> = {}) =>
-  shouldDraw({ pointerType: "touch", width: 20, height: 20, forcePenOnly: false, ...over });
+  shouldDraw({ pointerType: "touch", width: 20, height: 20, fingerDrawing: true, ...over });
 
-describe("palm rejection", () => {
+describe("who is allowed to draw", () => {
   it("always lets a stylus and a mouse draw", () => {
-    expect(shouldDraw({ pointerType: "pen", forcePenOnly: true })).toBe(true);
-    expect(shouldDraw({ pointerType: "mouse", forcePenOnly: true })).toBe(true);
+    expect(shouldDraw({ pointerType: "pen", fingerDrawing: false })).toBe(true);
+    expect(shouldDraw({ pointerType: "mouse", fingerDrawing: false })).toBe(true);
   });
 
-  it("lets a fingertip draw before any stylus has appeared", () => {
-    expect(touch()).toBe(true);
+  it("refuses a finger by default", () => {
+    // The whole bug: a palm resting on the glass must never leave a mark, and
+    // it must not depend on a stylus having been seen first — a palm lands
+    // before the pen tip does.
+    expect(touch({ fingerDrawing: false })).toBe(false);
   });
 
-  it("stops touch drawing for good once a stylus has been used", () => {
-    expect(touch()).toBe(true);
+  it("refuses a palm-sized contact even before any stylus appears", () => {
+    expect(touch({ fingerDrawing: false, width: 2, height: 2 })).toBe(false);
+  });
+
+  it("does not depend on a pen having been seen", () => {
+    expect(hasSeenPen()).toBe(false);
+    expect(touch({ fingerDrawing: false })).toBe(false);
     notePointerType("pen");
-    expect(hasSeenPen()).toBe(true);
-    // This is the bug people actually hit: a palm resting beside the pen.
-    expect(touch()).toBe(false);
+    expect(touch({ fingerDrawing: false })).toBe(false);
   });
 
-  it("rejects a broad contact patch even before a stylus appears", () => {
-    // A stylus tip is a couple of px, a fingertip twenty or thirty, a palm far
-    // more. Judge it on its own evidence rather than waiting for a setting.
+  it("lets a fingertip draw once the user asks for it", () => {
+    expect(touch()).toBe(true);
+  });
+
+  it("still refuses a broad contact when finger drawing is on", () => {
     expect(touch({ width: 90, height: 70 })).toBe(false);
     expect(touch({ width: 8, height: 120 })).toBe(false);
   });
@@ -49,14 +57,10 @@ describe("palm rejection", () => {
     expect(touch({ width: 41, height: 40 })).toBe(false);
   });
 
-  it("honours the explicit pen-only setting with no stylus in sight", () => {
-    expect(touch({ forcePenOnly: true })).toBe(false);
-  });
-
   it("treats missing contact geometry as a fingertip", () => {
-    // Some browsers report nothing; refusing to draw would be worse than
-    // occasionally accepting a touch.
-    expect(shouldDraw({ pointerType: "touch", forcePenOnly: false })).toBe(true);
+    // Safari reports none at all, so refusing on absence would break finger
+    // drawing entirely on iOS for the people who deliberately turned it on.
+    expect(shouldDraw({ pointerType: "touch", fingerDrawing: true })).toBe(true);
   });
 
   it("only remembers a pen, not other pointer types", () => {

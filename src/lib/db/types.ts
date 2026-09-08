@@ -211,8 +211,16 @@ export interface StudySession {
 export interface Settings {
   id: "settings";
   theme: "light" | "dark" | "system";
-  /** Palm rejection: ignore touch input while a stylus is in range. */
-  stylusOnly: boolean;
+  /**
+   * Whether a finger can lay down ink.
+   *
+   * Off by default. On a tablet a finger scrolls and a stylus draws, which is
+   * the only arrangement that cannot mistake a resting palm for a deliberate
+   * mark. Inferring it from contact size does not work: Safari reports no
+   * touch contact geometry at all, and a palm usually lands *before* the pen
+   * tip, so "a stylus has been seen" has not armed yet when it matters.
+   */
+  fingerDrawing: boolean;
   /** Scroll direction lock for the editor. */
   scrollLock: "vertical" | "horizontal";
   defaultPaper: PaperStyle;
@@ -228,7 +236,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   id: "settings",
   theme: "system",
-  stylusOnly: false,
+  fingerDrawing: false,
   scrollLock: "vertical",
   defaultPaper: "lined-wide",
   defaultPaperColor: "white",

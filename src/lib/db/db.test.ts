@@ -139,9 +139,9 @@ describe("sets and terms", () => {
 
 describe("settings", () => {
   it("fills in keys missing from a stored record", async () => {
-    await settings.update({ stylusOnly: true });
+    await settings.update({ fingerDrawing: true });
     const loaded = await settings.get();
-    expect(loaded.stylusOnly).toBe(true);
+    expect(loaded.fingerDrawing).toBe(true);
     expect(loaded.autoplaySeconds).toBe(4); // default survives a partial write
   });
 });

@@ -223,3 +223,62 @@ test("the sticky note tool actually places a note", async ({ page }) => {
     { timeout: 15_000 },
   );
 });
+
+/**
+ * Dispatches a real gesture of a given pointerType straight at the ink surface.
+ * Playwright's mouse cannot produce a `pen` or `touch` pointerType, and this
+ * distinction is the entire behaviour under test.
+ */
+async function gesture(
+  page: Page,
+  pointerType: "pen" | "touch",
+  opts: { id?: number; width?: number; height?: number } = {},
+): Promise<void> {
+  await page.evaluate(
+    ({ pointerType, opts }) => {
+      const el = document.querySelector('[role="application"]')!;
+      const r = el.getBoundingClientRect();
+      const mk = (type: string, x: number, y: number, extra: Record<string, unknown> = {}) =>
+        new PointerEvent(type, {
+          pointerId: opts.id ?? 1,
+          pointerType,
+          isPrimary: true,
+          bubbles: true,
+          cancelable: true,
+          clientX: r.left + x,
+          clientY: r.top + y,
+          pressure: pointerType === "pen" ? 0.6 : 0.5,
+          width: opts.width ?? 1,
+          height: opts.height ?? 1,
+          buttons: 1,
+          ...extra,
+        });
+      el.dispatchEvent(mk("pointerdown", 60, 60));
+      for (let i = 1; i <= 20; i++) el.dispatchEvent(mk("pointermove", 60 + i * 9, 60 + i * 2));
+      el.dispatchEvent(mk("pointerup", 240, 100, { buttons: 0 }));
+    },
+    { pointerType, opts },
+  );
+}
+
+test("a resting hand never draws, but the stylus does", async ({ page }) => {
+  await seedNote(page);
+  await page.goto(`/note/?id=${NOTE_ID}`);
+  await expect(page.getByRole("application").first()).toBeVisible({ timeout: 15_000 });
+
+  // A palm landing before any stylus has appeared — the ordering that defeats
+  // every "wait until we have seen a pen" heuristic. Safari also reports a 1x1
+  // contact for touch, so contact size cannot rescue it either.
+  await gesture(page, "touch", { id: 11, width: 1, height: 1 });
+  await page.waitForTimeout(900);
+  expect(await storedStrokeCount(page)).toBe(0);
+
+  // The pencil must still work.
+  await gesture(page, "pen", { id: 12 });
+  await expect.poll(() => storedStrokeCount(page), { timeout: 10_000 }).toBe(1);
+
+  // And a touch after the pen is still a resting hand, not a second pen.
+  await gesture(page, "touch", { id: 13 });
+  await page.waitForTimeout(900);
+  expect(await storedStrokeCount(page)).toBe(1);
+});
